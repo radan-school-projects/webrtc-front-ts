@@ -44,6 +44,11 @@
     ]
   },
   "devDependencies": {
-    "@material-ui/types": "^5.1.0"
+    "@material-ui/types": "^5.1.0",
+    "@typescript-eslint/eslint-plugin": "^4.15.1",
+    "@typescript-eslint/parser": "^4.15.1",
+    "eslint": "^7.20.0",
+    "eslint-config-google": "^0.14.0",
+    "eslint-plugin-react": "^7.22.0"
   }
 }
