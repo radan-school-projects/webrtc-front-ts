@@ -1,44 +1,45 @@
 import React from "react";
 import { Button, Paper } from "@material-ui/core";
 import { Divider, Typography } from "@material-ui/core";
-import { makeStyles, Theme } from "@material-ui/core/styles";
+import { makeStyles, createStyles, Theme } from "@material-ui/core/styles";
 import unicornImage
   from "../../assets/images/meritt-thomas-KTYjVDmN4A4-unsplash.jpg";
 
 // const color = "#FFF2FF";
 
-const useStyles = makeStyles((theme: Theme) => ({
-  root1: {
-    color: theme.palette.primary.contrastText,
-  },
-  paper1: {
-    backgroundImage: `url(${unicornImage})`,
-    backgroundBlendMode: "multiply",
-    backgroundColor: "#999999",
-    backgroundSize: "cover",
-    backgroundPosition: "center center",
-    color: "inherit",
-  },
-  root2: {
-    padding: theme.spacing(4),
-  },
-  title: {
-    marginBottom: theme.spacing(1.5),
-  },
-  typo1: {
-    marginBottom: theme.spacing(2.5),
-  },
-  typo2: {
-    marginBottom: theme.spacing(2.5),
-  },
-  divider: {
-    marginBottom: theme.spacing(2.5),
-    backgroundColor: "#BDBDBD",
-  },
-  button: {
-    backgroundColor: theme.palette.primary.main,
-  },
-}));
+const useStyles = makeStyles((theme: Theme) =>
+  createStyles({
+    root1: {
+      color: theme.palette.primary.contrastText,
+    },
+    paper1: {
+      backgroundImage: `url(${unicornImage})`,
+      backgroundBlendMode: "multiply",
+      backgroundColor: "#999999",
+      backgroundSize: "cover",
+      backgroundPosition: "center center",
+      color: "inherit",
+    },
+    root2: {
+      padding: theme.spacing(4),
+    },
+    title: {
+      marginBottom: theme.spacing(1.5),
+    },
+    typo1: {
+      marginBottom: theme.spacing(2.5),
+    },
+    typo2: {
+      marginBottom: theme.spacing(2.5),
+    },
+    divider: {
+      marginBottom: theme.spacing(2.5),
+      backgroundColor: "#BDBDBD",
+    },
+    button: {
+      backgroundColor: theme.palette.primary.main,
+    },
+  }));
 
 const Jumbotron = () => {
   // eslint-disable-next-line no-unused-vars
