@@ -1,34 +1,46 @@
 import React from "react";
-import useStyles from "./Home.style";
-import { Card, Typography, CardMedia, CardContent } from "@material-ui/core";
-import { Link } from "react-router-dom";
-import unicornImage from
-  "../../assets/images/meritt-thomas-KTYjVDmN4A4-unsplash.jpg";
+import { Grid, Container, Hidden } from "@material-ui/core";
+import { makeStyles, Theme } from "@material-ui/core/styles";
+import Jumbotron from "../../components/Jumbotron/Jumbotron";
+import ProfileCard from "../../components/ProfileCard/ProfileCard";
 
-// type HomeProps = {}
+const useStyles = makeStyles((theme: Theme) => ({
+  card: {
+    maxWidth: 600,
+    margin: "auto",
+    marginTop: theme.spacing(5),
+  },
+  title: {
+    padding:
+      `${theme.spacing(3)}px ${theme.spacing(2.5)}px ${theme.spacing(2)}px`,
+    color: theme.palette.openTitle,
+  },
+  media: {
+    minHeight: 400,
+  },
+  imageCredit: {
+    marginTop: 15,
+  },
+}));
 
 const Home = (): JSX.Element => {
   const classes = useStyles();
+  console.log(classes);
 
   return (
-    <Card className={classes.card}>
-      <Typography variant="h6" className={classes.title} >
-        Home Page
-      </Typography>
-      <CardMedia
-        className={classes.media}
-        image={unicornImage}
-        title="A fantasy unicorn"
-      />
-      <CardContent>
-        <span>Photo by <a href="https://unsplash.com/@merittthomas?utm_source=unsplash&amp;utm_medium=referral&amp;utm_content=creditCopyText">Meritt Thomas</a> on <a href="https://unsplash.com/s/photos/unicorn?utm_source=unsplash&amp;utm_medium=referral&amp;utm_content=creditCopyText">Unsplash</a></span>
-        <br/><br/>
-        <Typography variant="body2" component="p">
-          Welcome to This MERN Boilerplate, &nbsp;
-          <Link to="/form">visit another page</Link>
-        </Typography>
-      </CardContent>
-    </Card>
+    <Container fixed>
+      <Grid container>
+        <Hidden only={["sm", "md"]}>
+          <Grid item lg={3} >
+            <ProfileCard />
+          </Grid>
+        </Hidden>
+        <Grid item xs={12} lg={9} >
+          <Jumbotron />
+          {/* List of recent tutorials */}
+        </Grid>
+      </Grid>
+    </Container>
   );
 };
 

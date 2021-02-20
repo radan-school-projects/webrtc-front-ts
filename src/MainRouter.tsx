@@ -4,7 +4,7 @@ import MyAppBar from "./components/MyAppbar/MyAppbar";
 import Home from "./pages/Home/Home";
 import NameForm from "./pages/NameForm/NameForm";
 
-const MainRouter = () => {
+const MainRouter = (): JSX.Element => {
   return (
     <>
       <MyAppBar />
