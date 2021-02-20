@@ -1,27 +1,28 @@
 import React from "react";
 import { Grid, Container, Hidden } from "@material-ui/core";
-import { makeStyles, Theme } from "@material-ui/core/styles";
+import { makeStyles, createStyles, Theme } from "@material-ui/core/styles";
 import Jumbotron from "../../components/Jumbotron/Jumbotron";
 import ProfileCard from "../../components/ProfileCard/ProfileCard";
 
-const useStyles = makeStyles((theme: Theme) => ({
-  card: {
-    maxWidth: 600,
-    margin: "auto",
-    marginTop: theme.spacing(5),
-  },
-  title: {
-    padding:
+const useStyles = makeStyles((theme: Theme) =>
+  createStyles({
+    card: {
+      maxWidth: 600,
+      margin: "auto",
+      marginTop: theme.spacing(5),
+    },
+    title: {
+      padding:
       `${theme.spacing(3)}px ${theme.spacing(2.5)}px ${theme.spacing(2)}px`,
-    color: theme.palette.openTitle,
-  },
-  media: {
-    minHeight: 400,
-  },
-  imageCredit: {
-    marginTop: 15,
-  },
-}));
+      color: theme.palette.openTitle,
+    },
+    media: {
+      minHeight: 400,
+    },
+    imageCredit: {
+      marginTop: 15,
+    },
+  }));
 
 const Home = (): JSX.Element => {
   const classes = useStyles();
@@ -29,7 +30,7 @@ const Home = (): JSX.Element => {
 
   return (
     <Container fixed>
-      <Grid container>
+      <Grid spacing={4} container>
         <Hidden only={["sm", "md"]}>
           <Grid item lg={3} >
             <ProfileCard />
