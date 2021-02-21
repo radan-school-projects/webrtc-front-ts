@@ -3,9 +3,7 @@ import { Button, Paper } from "@material-ui/core";
 import { Divider, Typography } from "@material-ui/core";
 import { makeStyles, createStyles, Theme } from "@material-ui/core/styles";
 import unicornImage
-  from "../../assets/images/meritt-thomas-KTYjVDmN4A4-unsplash.jpg";
-
-// const color = "#FFF2FF";
+  from "../assets/images/meritt-thomas-KTYjVDmN4A4-unsplash.jpg";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -42,8 +40,8 @@ const useStyles = makeStyles((theme: Theme) =>
   }));
 
 const Jumbotron = () => {
-  // eslint-disable-next-line no-unused-vars
   const classes = useStyles();
+
   return (
     <div className={classes.root1}>
       <Paper className={classes.paper1}>

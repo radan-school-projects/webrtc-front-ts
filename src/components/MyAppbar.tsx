@@ -1,5 +1,4 @@
 import React from "react";
-// import { Link } from "react-router-dom";
 import { makeStyles, createStyles, Theme } from "@material-ui/core/styles";
 import { AppBar, Toolbar, IconButton, Typography, Button }
   from "@material-ui/core";
@@ -22,6 +21,7 @@ const useStyles = makeStyles((theme: Theme) =>
 
 const MyAppBar = (): JSX.Element => {
   const classes = useStyles();
+
   return (
     <div className={classes.root}>
       <AppBar position="fixed">

@@ -2,7 +2,7 @@ import React from "react";
 import { Avatar, Card, CardContent, Grid, Typography, Link as MuiLink }
   from "@material-ui/core";
 import { makeStyles, createStyles, Theme } from "@material-ui/core/styles";
-import avatarImage from "../../assets/images/radan3-profile-pic.png";
+import avatarImage from "../assets/images/radan3-profile-pic.png";
 import { Facebook, GitHub, LinkedIn } from "@material-ui/icons";
 
 const socialMedias = [

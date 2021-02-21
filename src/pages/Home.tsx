@@ -1,8 +1,8 @@
 import React from "react";
 import { Grid, Container, Hidden } from "@material-ui/core";
 import { makeStyles, createStyles, Theme } from "@material-ui/core/styles";
-import Jumbotron from "../../components/Jumbotron/Jumbotron";
-import ProfileCard from "../../components/ProfileCard/ProfileCard";
+import Jumbotron from "../components/Jumbotron";
+import ProfileCard from "../components/ProfileCard";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({

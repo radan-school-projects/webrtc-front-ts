@@ -1,8 +1,8 @@
 import React from "react";
 import { Route, Switch } from "react-router-dom";
-import MyAppBar from "./components/MyAppbar/MyAppbar";
-import Home from "./pages/Home/Home";
-import NameForm from "./pages/NameForm/NameForm";
+import MyAppBar from "./components/MyAppbar";
+import Home from "./pages/Home";
+import NameForm from "./pages/NameForm";
 
 const MainRouter = (): JSX.Element => {
   return (
