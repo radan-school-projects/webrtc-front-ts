@@ -14,6 +14,11 @@ const useStyles = makeStyles((theme: Theme) =>
     jumbotron: {
       marginBottom: theme.spacing(2.5),
     },
+    tutsTitle: {
+      color: theme.palette.grey[700],
+      marginTop: theme.spacing(5),
+      marginBottom: theme.spacing(2.5),
+    },
   }));
 
 const Home = (): JSX.Element => {
@@ -32,7 +37,10 @@ const Home = (): JSX.Element => {
             <Jumbotron />
           </div>
 
-          <Typography variant="h5">Recent tutorials</Typography>
+          <Typography
+            variant="h5" className={classes.tutsTitle}>
+              Recent tutorials
+          </Typography>
           <div>
             <TutsList/>
           </div>

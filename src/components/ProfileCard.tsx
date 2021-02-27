@@ -44,11 +44,11 @@ const useStyles = makeStyles((theme: Theme) =>
     typo1: {
       marginTop: theme.spacing(1.5),
       marginBottom: theme.spacing(3),
-      color: "#636363",
+      color: theme.palette.grey[800],
     },
     typo2: {
       marginBottom: theme.spacing(6),
-      color: "#999999",
+      color: theme.palette.grey[500],
     },
     iconsGridContainer: {
       marginBottom: theme.spacing(0.5),
@@ -58,7 +58,7 @@ const useStyles = makeStyles((theme: Theme) =>
       marginRight: theme.spacing(1),
     },
     iconLink: {
-      color: "#B3B3B3",
+      color: theme.palette.grey[500],
     },
   }));
 

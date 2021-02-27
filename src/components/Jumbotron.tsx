@@ -13,7 +13,7 @@ const useStyles = makeStyles((theme: Theme) =>
     paper1: {
       backgroundImage: `url(${unicornImage})`,
       backgroundBlendMode: "multiply",
-      backgroundColor: "#999999",
+      backgroundColor: theme.palette.grey[500],
       backgroundSize: "cover",
       backgroundPosition: "center center",
       color: "inherit",
@@ -33,9 +33,6 @@ const useStyles = makeStyles((theme: Theme) =>
     divider: {
       marginBottom: theme.spacing(2.5),
       backgroundColor: "#BDBDBD",
-    },
-    button: {
-      backgroundColor: theme.palette.primary.main,
     },
   }));
 
@@ -59,7 +56,10 @@ const Jumbotron = () => {
         It uses utility classes for typography and spacing to space&nbsp;
         content out within the larger container.
           </Typography>
-          <Button variant="contained" color="primary" size="large">
+          <Button
+            variant="contained"
+            color="primary"
+            size="large">
             Learn More
           </Button>
         </div>
