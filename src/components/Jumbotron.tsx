@@ -20,19 +20,21 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     root2: {
       padding: theme.spacing(4),
+      paddingBottom: theme.spacing(5.5),
     },
     title: {
-      marginBottom: theme.spacing(1.5),
+      // marginTop: theme.spacing(2),
+      marginBottom: theme.spacing(5),
     },
     typo1: {
-      marginBottom: theme.spacing(2.5),
+      marginBottom: theme.spacing(3.5),
     },
     typo2: {
-      marginBottom: theme.spacing(2.5),
+      marginBottom: theme.spacing(5),
     },
     divider: {
-      marginBottom: theme.spacing(2.5),
-      backgroundColor: "#BDBDBD",
+      marginBottom: theme.spacing(2),
+      backgroundColor: theme.palette.grey[500],
     },
   }));
 
@@ -47,14 +49,14 @@ const Jumbotron = () => {
             Hello world!
           </Typography>
           <Typography variant="body1" className={classes.typo1}>
-        This is a simple hero unit, a simple jumbotron-style&nbsp;
-        component for calling extra attention&nbsp;
-        to featured content or information.
+            This is a simple hero unit, a simple jumbotron-style&nbsp;
+            component for calling extra attention&nbsp;
+            to featured content or information.
           </Typography>
           <Divider className={classes.divider} />
           <Typography variant="body2" className={classes.typo2}>
-        It uses utility classes for typography and spacing to space&nbsp;
-        content out within the larger container.
+            It uses utility classes for typography and spacing to space&nbsp;
+            content out within the larger container.
           </Typography>
           <Button
             variant="contained"
