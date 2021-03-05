@@ -1,9 +1,7 @@
-import React from "react";
+import React, { FC } from "react";
 import { Button, Paper } from "@material-ui/core";
 import { Divider, Typography } from "@material-ui/core";
 import { makeStyles, createStyles, Theme } from "@material-ui/core/styles";
-import unicornImage
-  from "../assets/images/meritt-thomas-KTYjVDmN4A4-unsplash.jpg";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -11,7 +9,6 @@ const useStyles = makeStyles((theme: Theme) =>
       color: theme.palette.primary.contrastText,
     },
     paper1: {
-      backgroundImage: `url(${unicornImage})`,
       backgroundBlendMode: "multiply",
       backgroundColor: theme.palette.grey[500],
       backgroundSize: "cover",
@@ -23,7 +20,6 @@ const useStyles = makeStyles((theme: Theme) =>
       paddingBottom: theme.spacing(5.5),
     },
     title: {
-      // marginTop: theme.spacing(2),
       marginBottom: theme.spacing(5),
     },
     typo1: {
@@ -38,36 +34,55 @@ const useStyles = makeStyles((theme: Theme) =>
     },
   }));
 
-const Jumbotron = () => {
+const Jumbotron: FC<JumbotronProps> = ({
+  bgImage,
+  className = "",
+  title = "Random Title, To Replace!",
+  text1 = "Blablabla, blabla! replacethis text!",
+  text2 = "",
+  btnText = "Explore More",
+  btnUrl = "#" }: JumbotronProps) => {
   const classes = useStyles();
 
   return (
-    <div className={classes.root1}>
-      <Paper className={classes.paper1}>
+    <div className={`${classes.root1} ${className}`}>
+      <Paper
+        className={classes.paper1}
+        style={{ backgroundImage: `url(${bgImage})` }}
+      >
         <div className={classes.root2}>
           <Typography variant="h2" component="h1" className={classes.title}>
-            Hello world!
+            {title}
           </Typography>
           <Typography variant="body1" className={classes.typo1}>
-            This is a simple hero unit, a simple jumbotron-style&nbsp;
-            component for calling extra attention&nbsp;
-            to featured content or information.
+            {text1}
           </Typography>
           <Divider className={classes.divider} />
           <Typography variant="body2" className={classes.typo2}>
-            It uses utility classes for typography and spacing to space&nbsp;
-            content out within the larger container.
+            {text2}
           </Typography>
           <Button
             variant="contained"
             color="primary"
-            size="large">
-            Learn More
+            size="large"
+            href={btnUrl}
+          >
+            {btnText}
           </Button>
         </div>
       </Paper>
     </div>
   );
+};
+
+type JumbotronProps = {
+  bgImage: string,
+  className?: string,
+  title?: string,
+  text1?: string,
+  text2?: string,
+  btnText?: string,
+  btnUrl?: string,
 };
 
 export default Jumbotron;

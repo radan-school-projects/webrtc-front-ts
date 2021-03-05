@@ -5,9 +5,11 @@ import {
   Hidden,
   Typography } from "@material-ui/core";
 import { makeStyles, createStyles, Theme } from "@material-ui/core/styles";
-import Jumbotron from "../components/Jumbotron";
-import ProfileCard from "../components/ProfileCard";
-import TutsList from "../components/TutsList";
+import Jumbotron from "../../components/Jumbotron";
+import ProfileCard from "./ProfileCard";
+import TutsList from "./TutsList";
+import cookImg
+  from "../../assets/images/joseph-gonzalez-fdlZBWIP0aM-unsplash.jpg";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -26,25 +28,35 @@ const Home = (): JSX.Element => {
 
   return (
     <Container fixed>
-      <Grid spacing={4} container>
+      <Grid container spacing={4}>
+
         <Hidden only={["xs", "sm", "md"]}>
           <Grid item lg={3} >
             <ProfileCard />
           </Grid>
         </Hidden>
+
         <Grid item xs={12} lg={9} >
-          <div className={classes.jumbotron}>
-            <Jumbotron />
-          </div>
+          <Jumbotron
+            bgImage={cookImg}
+            title="This is a React TS Frontend!"
+            text1="Welcome to this rad simple react app!!
+                I made it for demo and learning purpose."
+            text2=""
+            btnText="Read More"
+            className={classes.jumbotron}
+          />
 
           <Typography
-            variant="h5" className={classes.tutsTitle}>
-              Recent tutorials
+            variant="h5"
+            className={classes.tutsTitle}
+          >
+            Recent Tutorials
           </Typography>
-          <div>
-            <TutsList/>
-          </div>
+
+          <TutsList/>
         </Grid>
+
       </Grid>
     </Container>
   );
