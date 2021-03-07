@@ -1,10 +1,5 @@
 const config = {
-  port: process.env.PORT || 3000,
-  /*
-    TODO: i don't know why dotenv and even setting up env variables
-    TODO: in the scripts doesn't work with create-react-app generated apps
-  */
-  apiUrl: "https://mern-mono-ts.herokuapp.com/api" || "http://localhost:9999/api",
+  appApiBaseUrl: process.env.REACT_APP_API_BASE_URL || `http://localhost:${process.env.REACT_APP_API_PORT_LOCAL}/api`,
 };
 
 export default config;

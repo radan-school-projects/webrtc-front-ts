@@ -1,12 +1,11 @@
 import React, { FC, useState, useEffect } from "react";
 import { makeStyles, createStyles, Theme } from "@material-ui/core/styles";
-import axios from "axios";
-import config from "../../config/config";
 import { Tutorial } from "../../types";
 import TutorialCard from "../../components/TutorialCard";
 import { usePromiseTracker, trackPromise } from "react-promise-tracker";
 import { Grid } from "@material-ui/core";
 import Skeleton from "@material-ui/lab/Skeleton";
+import { appApiAxios } from "../../config/axios";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -20,7 +19,6 @@ const useStyles = makeStyles((theme: Theme) =>
 
 const TutsList: FC = () => {
   const [data, setData] = useState<Array<Tutorial>>([]);
-  // const [loading, setLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
   const { promiseInProgress } = usePromiseTracker();
 
@@ -29,9 +27,8 @@ const TutsList: FC = () => {
   // eslint-disable-next-line require-jsdoc
   async function loadPublishedTuts(): Promise<any> {
     try {
-      const res = await axios(`${config.apiUrl}/tutorials/published`);
+      const res = await appApiAxios.get("/tutorials");
       setData(res.data.data);
-      // setLoading(false);
     } catch (err) {
       console.log(`could not fetch data:\n${err}`);
       setError(err);
@@ -42,8 +39,7 @@ const TutsList: FC = () => {
     trackPromise(loadPublishedTuts());
   }, []);
 
-  // if (loading) return <h1>loading...</h1>;
-  if (error) return <h1>{error.message}</h1>;
+  if (error) return <h1>{error.stack}</h1>;
 
   const tempArray = [1, 2, 3];
 
@@ -55,7 +51,7 @@ const TutsList: FC = () => {
           key={index}
           container
           spacing={2}
-          direction={isOdd(index + 1) ? "row" : "row-reverse"}
+          direction={isOdd(index + 1) ? "row-reverse" : "row"}
           className={classes.cardSkeleton}
         >
           <Grid item xs={12} md={5}>
