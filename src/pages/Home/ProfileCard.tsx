@@ -80,7 +80,10 @@ const ProfileCard = () => {
             A strange minded kiddo who claims to be a self-taught developper.
           </Typography>
           <Grid
-            container justify="center" className={classes.iconsGridContainer}>
+            container
+            justifyContent="center"
+            className={classes.iconsGridContainer}
+          >
             {socialMedias.map((e) => (
               <Grid item key={e.name} className={classes.iconGridItem}>
                 <MuiLink

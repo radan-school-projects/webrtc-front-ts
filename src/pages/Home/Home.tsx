@@ -42,9 +42,8 @@ const Home = (): JSX.Element => {
             title="This is a React TS Frontend!"
             text1="Welcome to this rad simple react app!!
                 I made it for demo and learning purpose."
-            text2=""
+            // text2="blablabla, encore du balbla!"
             btnText="Read More"
-            className={classes.jumbotron}
           />
 
           <Typography

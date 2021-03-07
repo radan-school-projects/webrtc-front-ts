@@ -45,7 +45,7 @@ const TutsList: FC = () => {
 
   return promiseInProgress ?
   (
-    <div>
+    <>
       {tempArray.map((e, index) => (
         <Grid
           key={index}
@@ -65,10 +65,10 @@ const TutsList: FC = () => {
           </Grid>
         </Grid>
       ))}
-    </div>
+    </>
   ) :
   (
-    <div>
+    <>
       {data.map((tutorial, index) => (
         <TutorialCard
           key={index}
@@ -77,7 +77,7 @@ const TutsList: FC = () => {
           className={classes.tutCard}
         />
       ))}
-    </div>
+    </>
   );
 };
 

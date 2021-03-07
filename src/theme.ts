@@ -6,11 +6,13 @@ declare module "@material-ui/core/styles/createPalette" {
   interface Palette {
     openTitle: React.CSSProperties["color"];
     protectedTitle: React.CSSProperties["color"];
+    // type: "light" | "dark";
   }
   // eslint-disable-next-line no-unused-vars
   interface PaletteOptions {
     openTitle: React.CSSProperties["color"];
     protectedTitle: React.CSSProperties["color"];
+    // type: "light" | "dark";
   }
 }
 
@@ -34,7 +36,7 @@ const theme = createMuiTheme({
     },
     openTitle: "#3f4771",
     protectedTitle: pink["400"],
-    type: "light",
+    // type: "light",
   },
 });
 

@@ -10,7 +10,9 @@
     "clean": "rimraf build"
   },
   "dependencies": {
-    "@material-ui/core": "^4.11.3",
+    "@emotion/react": "^11.1.5",
+    "@emotion/styled": "^11.1.5",
+    "@material-ui/core": "^5.0.0-alpha.27",
     "@material-ui/icons": "^5.0.0-alpha.24",
     "@material-ui/lab": "^4.0.0-alpha.57",
     "@testing-library/jest-dom": "^5.11.4",

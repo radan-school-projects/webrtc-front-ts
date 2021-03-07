@@ -2,7 +2,8 @@ import React from "react";
 import { Route, Switch } from "react-router-dom";
 import MyAppBar from "./components/MyAppbar";
 import Home from "./pages/Home";
-import NameForm from "./pages/NameForm";
+import Register from "./pages/Register";
+import Login from "./pages/Login";
 
 const MainRouter = (): JSX.Element => {
   return (
@@ -10,7 +11,8 @@ const MainRouter = (): JSX.Element => {
       <MyAppBar />
       <Switch>
         <Route exact path="/" component={Home} />
-        <Route path="/form" component={NameForm} />
+        <Route path="/register" component={Register} />
+        <Route path="/login" component={Login} />
       </Switch>
     </>
   );

@@ -2,41 +2,24 @@ import React, { FC } from "react";
 import { Button, Paper } from "@material-ui/core";
 import { Divider, Typography } from "@material-ui/core";
 import { makeStyles, createStyles, Theme } from "@material-ui/core/styles";
+import theme from "../theme";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
-    root1: {
+    paper: {
       color: theme.palette.primary.contrastText,
-    },
-    paper1: {
-      backgroundBlendMode: "multiply",
-      backgroundColor: theme.palette.grey[500],
+      padding: theme.spacing(4),
       backgroundSize: "cover",
       backgroundPosition: "center center",
-      color: "inherit",
-    },
-    root2: {
-      padding: theme.spacing(4),
-      paddingBottom: theme.spacing(5.5),
-    },
-    title: {
-      marginBottom: theme.spacing(5),
-    },
-    typo1: {
-      marginBottom: theme.spacing(3.5),
-    },
-    typo2: {
-      marginBottom: theme.spacing(5),
     },
     divider: {
-      marginBottom: theme.spacing(2),
-      backgroundColor: theme.palette.grey[500],
+      backgroundColor: theme.palette.grey[200],
     },
   }));
 
 const Jumbotron: FC<JumbotronProps> = ({
   bgImage,
-  className = "",
+  // className = "",
   title = "Random Title, To Replace!",
   text1 = "Blablabla, blabla! replacethis text!",
   text2 = "",
@@ -45,39 +28,53 @@ const Jumbotron: FC<JumbotronProps> = ({
   const classes = useStyles();
 
   return (
-    <div className={`${classes.root1} ${className}`}>
-      <Paper
-        className={classes.paper1}
-        style={{ backgroundImage: `url(${bgImage})` }}
+    <Paper
+      className={classes.paper}
+      style={{ backgroundImage: `url(${bgImage})` }}
+      sx={{
+        color: "#fff",
+        backgroundBlendMode: "multiply",
+        backgroundColor: theme.palette.grey[500],
+      }}
+    >
+      <Typography
+        variant="h2"
+        component="h1"
+        sx={{ mb: "2rem" }}
       >
-        <div className={classes.root2}>
-          <Typography variant="h2" component="h1" className={classes.title}>
-            {title}
-          </Typography>
-          <Typography variant="body1" className={classes.typo1}>
-            {text1}
-          </Typography>
-          <Divider className={classes.divider} />
-          <Typography variant="body2" className={classes.typo2}>
-            {text2}
-          </Typography>
-          <Button
-            variant="contained"
-            color="primary"
-            size="large"
-            href={btnUrl}
-          >
-            {btnText}
-          </Button>
-        </div>
-      </Paper>
-    </div>
+        {title}
+      </Typography>
+      <Typography
+        variant="body1"
+        sx={{ mb: "1.5rem" }}
+      >
+        {text1}
+      </Typography>
+      <Divider
+        className={classes.divider}
+        sx={{ marginBottom: "1.5rem" }}
+      />
+      <Typography
+        variant="body2"
+        sx={{ mb: "2rem" }}
+      >
+        {text2}
+      </Typography>
+      <Button
+        variant="contained"
+        color="primary"
+        size="large"
+        href={btnUrl}
+      >
+        {btnText}
+      </Button>
+    </Paper>
   );
 };
 
 type JumbotronProps = {
   bgImage: string,
-  className?: string,
+  // className?: string,
   title?: string,
   text1?: string,
   text2?: string,
