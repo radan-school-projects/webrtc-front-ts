@@ -2,7 +2,7 @@ const path = require("path");
 const express = require("express");
 
 const CWD = process.cwd();
-const port = process.env.NODE_ENV || 5009;
+const port = process.env.PORT || 4550;
 
 const publicPath = path.join(CWD, "build");
 const app = express();
