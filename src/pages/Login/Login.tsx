@@ -1,17 +1,17 @@
-import * as React from "react";
+import React, { useState } from "react";
 import Avatar from "@material-ui/core/Avatar";
 import Button from "@material-ui/core/Button";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import TextField from "@material-ui/core/TextField";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-import Checkbox from "@material-ui/core/Checkbox";
 import Link from "@material-ui/core/Link";
 import Grid from "@material-ui/core/Grid";
 import Box from "@material-ui/core/Box";
 import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import Typography from "@material-ui/core/Typography";
 import Container from "@material-ui/core/Container";
-import { Link as RouterLink } from "react-router-dom";
+import { Link as RouterLink, useHistory } from "react-router-dom";
+import MessageAlert from "./MessageAlert";
+import { appApiAxios } from "../../config/axios";
 
 const Copyright = (props: any) => {
   return (
@@ -27,6 +27,35 @@ const Copyright = (props: any) => {
 };
 
 const Login = () => {
+  const [userCredentials, setUserCredentials] =
+    useState({ email: "", password: "" });
+  const [errorMessage, setErrorMessage] =
+    useState<string[]>([]);
+  const history = useHistory();
+
+  const handleLogin: React.FormEventHandler<HTMLFormElement> = async (e) => {
+    try {
+      e.preventDefault();
+
+      const { email, password } = userCredentials;
+      const res = await appApiAxios.post("/auth/login", { email, password });
+
+      if (res.data.data.token) {
+        history.push("/dashboard");
+      }
+    } catch (err) {
+      if (err.response) {
+        setErrorMessage([...err.response.data.message]);
+      } else {
+        throw err;
+      }
+    }
+  };
+
+  const handleInputChange: React.ChangeEventHandler<HTMLInputElement> = (e) => {
+    setUserCredentials({ ...userCredentials, [e.target.name]: e.target.value });
+  };
+
   return (
     <Container component="main" maxWidth="xs">
       <CssBaseline />
@@ -44,6 +73,7 @@ const Login = () => {
         <Typography component="h1" variant="h5">
           Log In
         </Typography>
+        <MessageAlert message={errorMessage} severity="error" />
         <Box
           component="form"
           noValidate
@@ -51,6 +81,7 @@ const Login = () => {
             width: "100%", // Fix IE11 issue.
             mt: 1,
           }}
+          onSubmit={handleLogin}
         >
           <TextField
             margin="normal"
@@ -61,6 +92,7 @@ const Login = () => {
             name="email"
             autoComplete="email"
             autoFocus
+            onChange={handleInputChange}
           />
           <TextField
             margin="normal"
@@ -71,10 +103,7 @@ const Login = () => {
             type="password"
             id="password"
             autoComplete="current-password"
-          />
-          <FormControlLabel
-            control={<Checkbox value="remember" color="primary" />}
-            label="Remember me"
+            onChange={handleInputChange}
           />
           <Button
             type="submit"
@@ -109,4 +138,3 @@ const Login = () => {
 };
 
 export default Login;
-

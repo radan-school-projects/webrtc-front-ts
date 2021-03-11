@@ -27,7 +27,7 @@ const TutsList: FC = () => {
   // eslint-disable-next-line require-jsdoc
   async function loadPublishedTuts(): Promise<any> {
     try {
-      const res = await appApiAxios.get("/tutorials");
+      const res = await appApiAxios.get("/tutorials/published");
       setData(res.data.data);
     } catch (err) {
       console.log(`could not fetch data:\n${err}`);
