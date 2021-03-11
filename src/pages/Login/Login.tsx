@@ -40,7 +40,7 @@ const Login = () => {
       const { email, password } = userCredentials;
       const res = await appApiAxios.post("/auth/login", { email, password });
 
-      if (res.data.data.token) {
+      if (res.data.content.token) {
         history.push("/dashboard");
       }
     } catch (err) {

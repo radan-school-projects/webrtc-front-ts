@@ -28,7 +28,7 @@ const TutsList: FC = () => {
   async function loadPublishedTuts(): Promise<any> {
     try {
       const res = await appApiAxios.get("/tutorials/published");
-      setData(res.data.data);
+      setData(res.data.content);
     } catch (err) {
       console.log(`could not fetch data:\n${err}`);
       setError(err);
