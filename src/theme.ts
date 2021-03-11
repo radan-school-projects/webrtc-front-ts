@@ -36,6 +36,12 @@ const theme = createMuiTheme({
     },
     openTitle: "#3f4771",
     protectedTitle: pink["400"],
+    error: {
+      light: "#FDECEA",
+      main: "#f44336",
+      dark: "#d32f2f",
+      contrastText: "#fff",
+    },
     // type: "light",
   },
 });
