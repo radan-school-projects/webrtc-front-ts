@@ -81,9 +81,9 @@ const TutsList: FC = () => {
   );
 };
 
-// eslint-disable-next-line require-jsdoc
-function isOdd(num: number) {
+
+const isOdd = (num: number) => {
   return ((num) % 2) == 0;
-}
+};
 
 export default TutsList;
