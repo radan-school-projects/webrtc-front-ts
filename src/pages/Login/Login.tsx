@@ -45,8 +45,7 @@ const Login = () => {
       }
     } catch (err) {
       if (err.response) {
-        const msg = err.response.data.message;
-        setErrorMessage((msg instanceof String) ? [msg] : msg);
+        setErrorMessage(err.response.data.message);
       } else {
         throw err;
       }
