@@ -45,7 +45,7 @@ const Login = () => {
       }
     } catch (err) {
       if (err.response) {
-        setErrorMessage([...err.response.data.message]);
+        setErrorMessage(err.response.data.message);
       } else {
         throw err;
       }
@@ -73,7 +73,10 @@ const Login = () => {
         <Typography component="h1" variant="h5">
           Log In
         </Typography>
-        <MessageAlert message={errorMessage} severity="error" />
+        <MessageAlert
+          message={errorMessage}
+          severity="error"
+        />
         <Box
           component="form"
           noValidate
