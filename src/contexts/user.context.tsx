@@ -4,12 +4,12 @@ import React, {
 } from "react";
 
 interface UserContextValue {
-  username: string | null;
-  updateUsername: (username: string | null) => void;
+  username: string;
+  updateUsername: (username: string) => void;
 }
 
 const defaultUserContextValue: UserContextValue = {
-  username: null,
+  username: "",
   updateUsername: (): void => {},
 };
 
@@ -21,9 +21,9 @@ interface UserProviderProps {
   children: ReactNode;
 }
 export const UserProvider = ({ children }: UserProviderProps) => {
-  const [username, setUsername] = useState<string | null>("");
+  const [username, setUsername] = useState<string>("");
 
-  const updateUsername = (newUsername: string | null) => {
+  const updateUsername = (newUsername: string) => {
     setUsername(newUsername);
   };
 

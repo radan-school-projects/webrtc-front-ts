@@ -2,7 +2,8 @@ import React, {
   ChangeEventHandler,
   MouseEventHandler,
   useEffect,
-  useState,
+  // useRef,
+  // useState,
 } from "react";
 import {
   Box, Button, Input,
@@ -11,12 +12,15 @@ import socket from "../../app/socket";
 import * as emitter from "../../utils/emitter";
 import { IResponse } from "../../types";
 import * as notifier from "../../utils/notifier";
+import { useUser } from "../../contexts/user.context";
 
 const UsernameInput = () => {
-  const [username, setUsername] = useState<string>("");
+  // const [username, setUsername] = useState<string>("");
+  const { username, updateUsername } = useUser();
+  // const socketRef = useRef(socket);
 
   const handleInputChange: ChangeEventHandler<HTMLInputElement> = (e) => {
-    setUsername(e.target.value);
+    updateUsername(e.target.value);
   };
 
   const handleButtonClick: MouseEventHandler = (e) => {
@@ -25,19 +29,6 @@ const UsernameInput = () => {
     // create a socket connection
     socket.auth = { username };
     socket.connect();
-
-    // set current socket ref
-    // socketRef.current = socket
-
-    // login
-    if (socket.connected) {
-      emitter.send(socket, {
-        type: "login",
-        content: {
-          username,
-        },
-      });
-    }
   };
 
   useEffect(() => {
@@ -45,6 +36,19 @@ const UsernameInput = () => {
       const { success, type, content } = response as IResponse;
 
       switch (type) {
+        case "connect": {
+          const { connected } = content;
+          if (connected) {
+            emitter.send(socket, {
+              type: "login", // or register, whatever
+              content: {
+                username,
+              },
+            });
+          }
+        }
+          break;
+
         case "login": {
           const { description } = content;
           if (!success) {
@@ -71,7 +75,7 @@ const UsernameInput = () => {
     return () => {
       socket.off("response");
     };
-  }, []);
+  }, [username]);
 
   return (
     <Box>
