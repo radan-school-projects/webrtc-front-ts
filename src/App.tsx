@@ -4,10 +4,13 @@ import {
   theme,
 } from "@chakra-ui/react";
 import Main from "./Main";
+import { UserProvider } from "./contexts/user.context";
 
 const App = () => (
   <ChakraProvider theme={theme}>
-    <Main />
+    <UserProvider>
+      <Main />
+    </UserProvider>
   </ChakraProvider>
 );
 
