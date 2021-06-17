@@ -19,7 +19,9 @@ interface OfferDialogProps {
   // title: string;
   // description: string;
   content: DialogContent;
-  onClose: () => void;
+  // onClose: () => void;
+  onAccept: () => void;
+  onRefuse: () => void;
 }
 
 const OfferDialog = ({
@@ -27,7 +29,9 @@ const OfferDialog = ({
   // title,
   // description,
   content,
-  onClose,
+  // onClose,
+  onAccept,
+  onRefuse,
 }: OfferDialogProps) => {
   const cancelRef = React.useRef<HTMLButtonElement | null>(null);
   const { title, description } = content;
@@ -36,7 +40,7 @@ const OfferDialog = ({
     <AlertDialog
       isOpen={isOpen}
       leastDestructiveRef={cancelRef}
-      onClose={onClose}
+      onClose={onRefuse}
     >
       <AlertDialogOverlay>
         <AlertDialogContent>
@@ -51,11 +55,11 @@ const OfferDialog = ({
           </AlertDialogBody>
 
           <AlertDialogFooter>
-            <Button ref={cancelRef} onClick={onClose}>
-              Cancel
+            <Button colorScheme="green" onClick={onAccept} mr={3}>
+              Accept
             </Button>
-            <Button colorScheme="red" onClick={onClose} ml={3}>
-              Delete
+            <Button colorScheme="red" ref={cancelRef} onClick={onRefuse}>
+              Refuse
             </Button>
           </AlertDialogFooter>
         </AlertDialogContent>

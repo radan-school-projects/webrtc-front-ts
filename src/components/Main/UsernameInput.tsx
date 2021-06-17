@@ -33,9 +33,10 @@ const UsernameInput = () => {
     socket.connect();
   };
 
-  const responseListener = (response: IResponse) => {
-    // const { success, type, content } = response as IResponse;
-    const { success, type, content } = response;
+  const responseListener = (response: any) => {
+    // console.log("ooiyabou!");
+    const { success, type, content } = response as IResponse;
+    // const { success, type, content } = response;
 
     switch (type) {
       // case "connect": {
@@ -51,15 +52,25 @@ const UsernameInput = () => {
       // }
       //   break;
 
-      case "connect":
-        if (socket.connected) {
+      case "connect": {
+        const { description } = content;
+        if (success) {
+          // if (socket.connected) {
           emitter.send(socket, {
             type: "login", // or register, whatever
             content: {
               username,
             },
           });
+          // }
+        } else {
+          notifier.toast({
+            status: "error",
+            title: "couldn't connect",
+            description,
+          });
         }
+      }
         break;
 
       case "login": {
@@ -86,7 +97,7 @@ const UsernameInput = () => {
   };
 
   useEffect(() => {
-    socket.once("response", responseListener);
+    socket.on("response", responseListener);
 
     return () => {
       socket.off("response", responseListener);
