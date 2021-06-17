@@ -33,60 +33,63 @@ const UsernameInput = () => {
     socket.connect();
   };
 
-  useEffect(() => {
-    socket.on("response", (response) => {
-      const { success, type, content } = response as IResponse;
+  const responseListener = (response: IResponse) => {
+    // const { success, type, content } = response as IResponse;
+    const { success, type, content } = response;
 
-      switch (type) {
-        // case "connect": {
-        //   const { connected } = content;
-        //   if (connected) {
-        //     emitter.send(socket, {
-        //       type: "login", // or register, whatever
-        //       content: {
-        //         username,
-        //       },
-        //     });
-        //   }
-        // }
-        //   break;
+    switch (type) {
+      // case "connect": {
+      //   const { connected } = content;
+      //   if (connected) {
+      //     emitter.send(socket, {
+      //       type: "login", // or register, whatever
+      //       content: {
+      //         username,
+      //       },
+      //     });
+      //   }
+      // }
+      //   break;
 
-        case "connect":
-          if (socket.connected) {
-            emitter.send(socket, {
-              type: "login", // or register, whatever
-              content: {
-                username,
-              },
-            });
-          }
-          break;
-
-        case "login": {
-          const { description } = content;
-          if (!success) {
-            notifier.toast({
-              title: "Couldn't login",
-              description,
-              status: "error",
-            });
-          } else {
-            notifier.toast({
-              title: "Logged in",
-              description,
-              status: "success",
-            });
-          }
+      case "connect":
+        if (socket.connected) {
+          emitter.send(socket, {
+            type: "login", // or register, whatever
+            content: {
+              username,
+            },
+          });
         }
-          break;
+        break;
 
-        default:
-          break;
+      case "login": {
+        const { description } = content;
+        if (!success) {
+          notifier.toast({
+            title: "Couldn't login",
+            description,
+            status: "error",
+          });
+        } else {
+          notifier.toast({
+            title: "Logged in",
+            description,
+            status: "success",
+          });
+        }
       }
-    });
+        break;
+
+      default:
+        break;
+    }
+  };
+
+  useEffect(() => {
+    socket.once("response", responseListener);
 
     return () => {
-      socket.off("response");
+      socket.off("response", responseListener);
     };
   }, [username/* , connected */]);
 
