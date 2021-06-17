@@ -6,11 +6,15 @@ import React, {
 interface UserContextValue {
   username: string;
   updateUsername: (username: string) => void;
+  friendname: string;
+  updateFriendname: (friendname: string) => void;
 }
 
 const defaultUserContextValue: UserContextValue = {
   username: "",
   updateUsername: (): void => {},
+  friendname: "",
+  updateFriendname: (): void => {},
 };
 
 const userContext = createContext<UserContextValue>(defaultUserContextValue);
@@ -22,14 +26,21 @@ interface UserProviderProps {
 }
 export const UserProvider = ({ children }: UserProviderProps) => {
   const [username, setUsername] = useState<string>("");
+  const [friendname, setFriendname] = useState<string>("");
 
   const updateUsername = (newUsername: string) => {
     setUsername(newUsername);
   };
 
+  const updateFriendname = (newFriendname: string) => {
+    setFriendname(newFriendname);
+  };
+
   const value = {
     username,
     updateUsername,
+    friendname,
+    updateFriendname,
   };
 
   return (

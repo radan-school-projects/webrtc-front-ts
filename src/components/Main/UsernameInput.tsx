@@ -8,16 +8,18 @@ import React, {
 import {
   Box, Button, Input,
 } from "@chakra-ui/react";
-import socket from "../../app/socket";
+// import socket from "../../app/socket";
 import * as emitter from "../../utils/emitter";
 import { IResponse } from "../../types";
 import * as notifier from "../../utils/notifier";
 import { useUser } from "../../contexts/user.context";
+import { useSocket } from "../../contexts/socket.context";
 
 const UsernameInput = () => {
   // const [username, setUsername] = useState<string>("");
   const { username, updateUsername } = useUser();
   // const socketRef = useRef(socket);
+  const { socket } = useSocket();
 
   const handleInputChange: ChangeEventHandler<HTMLInputElement> = (e) => {
     updateUsername(e.target.value);
@@ -36,9 +38,21 @@ const UsernameInput = () => {
       const { success, type, content } = response as IResponse;
 
       switch (type) {
-        case "connect": {
-          const { connected } = content;
-          if (connected) {
+        // case "connect": {
+        //   const { connected } = content;
+        //   if (connected) {
+        //     emitter.send(socket, {
+        //       type: "login", // or register, whatever
+        //       content: {
+        //         username,
+        //       },
+        //     });
+        //   }
+        // }
+        //   break;
+
+        case "connect":
+          if (socket.connected) {
             emitter.send(socket, {
               type: "login", // or register, whatever
               content: {
@@ -46,7 +60,6 @@ const UsernameInput = () => {
               },
             });
           }
-        }
           break;
 
         case "login": {
@@ -75,7 +88,7 @@ const UsernameInput = () => {
     return () => {
       socket.off("response");
     };
-  }, [username]);
+  }, [username/* , connected */]);
 
   return (
     <Box>

@@ -5,11 +5,14 @@ import {
 } from "@chakra-ui/react";
 import Main from "./Main";
 import { UserProvider } from "./contexts/user.context";
+import { SocketProvider } from "./contexts/socket.context";
 
 const App = () => (
   <ChakraProvider theme={theme}>
     <UserProvider>
-      <Main />
+      <SocketProvider>
+        <Main />
+      </SocketProvider>
     </UserProvider>
   </ChakraProvider>
 );
