@@ -6,12 +6,15 @@ import {
 import Main from "./Main";
 import { UserProvider } from "./contexts/user.context";
 import { SocketProvider } from "./contexts/socket.context";
+import { WebRTCProvider } from "./contexts/webrtc.context";
 
 const App = () => (
   <ChakraProvider theme={theme}>
     <UserProvider>
       <SocketProvider>
-        <Main />
+        <WebRTCProvider>
+          <Main />
+        </WebRTCProvider>
       </SocketProvider>
     </UserProvider>
   </ChakraProvider>

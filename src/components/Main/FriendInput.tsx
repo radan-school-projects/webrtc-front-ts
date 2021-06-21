@@ -3,7 +3,7 @@ import React, {
   ChangeEventHandler,
   useEffect,
   useState,
-  useRef,
+  // useRef,
 } from "react";
 import {
   Box,
@@ -15,6 +15,7 @@ import { useSocket } from "../../contexts/socket.context";
 import { IResponse } from "../../types";
 import * as notifier from "../../utils/notifier";
 import OfferDialog, { DialogContent } from "./OfferDialog";
+import { useWebRTC } from "../../contexts/webrtc.context";
 
 const FriendInput = () => {
   const { username, updateFriendname, friendname } = useUser();
@@ -31,29 +32,59 @@ const FriendInput = () => {
     setOfferedSessionDesc,
   ] = useState<RTCSessionDescription | null>(null);
   // ====
-  const peerRef = useRef<RTCPeerConnection | null>(null);
+  // const peerRef = useRef<RTCPeerConnection | null>(null);
+  const {
+    // peer,
+    // updatePeer,
+    peerRef,
+  } = useWebRTC();
+
+  // const notifyClientError = (description: string) => {
+  //   notifier.toast({
+  //     status: "error",
+  //     title: "Client error",
+  //     description,
+  //   });
+  // };
+
+  const notifyPeerError = () => {
+    notifier.toast({
+      status: "error",
+      title: "Peer error",
+      description: "Peer connexion not set properly",
+    });
+  };
 
   const handleButtonClick: MouseEventHandler<HTMLButtonElement> = async (e) => {
     e.preventDefault();
 
-    // create an offer // maybe store it inside a ref hook
-    // const peerConnection = new RTCPeerConnection();
+    if (!peerRef) {
+      // notifyClientError("Peer ref not set properly");
+      notifyPeerError();
+      return;
+    }
+
     peerRef.current = new RTCPeerConnection();
+    // updatePeer(new RTCPeerConnection());
 
-    // const offer = await peerConnection.createOffer();
-    // peerConnection.setLocalDescription(offer);
-    const offer = await peerRef.current.createOffer();
-    const localDesc = new RTCSessionDescription(offer);
-    peerRef.current.setLocalDescription(localDesc);
+    const peer = peerRef.current;
 
-    // send that offer
-    emitter.send(socket, {
-      type: "offer",
-      content: {
-        friendname,
-        offer,
-      },
-    });
+    if (peer) {
+      // const offer = await peerRef.current.createOffer();
+      const offer = await peer.createOffer();
+      const localDesc = new RTCSessionDescription(offer);
+      // peerRef.current.setLocalDescription(localDesc);
+      peer.setLocalDescription(localDesc);
+
+      // send that offer
+      emitter.send(socket, {
+        type: "offer",
+        content: {
+          friendname,
+          offer,
+        },
+      });
+    }
   };
 
   const onAccept = async () => {
@@ -63,20 +94,32 @@ const FriendInput = () => {
     updateFriendname(userOffering);
 
     if (offeredSessionDesc) {
-      // const peerConnection = new RTCPeerConnection();
-      // peerRef.current = peerConnection;
-      peerRef.current = new RTCPeerConnection();
-      const remoteDesc = new RTCSessionDescription(offeredSessionDesc);
-      // peerConnection.setRemoteDescription(remoteDesc);
-      // peerRef.current = peerConnection;
-      await peerRef.current.setRemoteDescription(remoteDesc);
-      // peerRef.current = await peerRef.current.setRemoteDescription(remoteDesc);
+      if (!peerRef) {
+        // notifyClientError("Peer ref not set properly");
+        notifyPeerError();
+        return;
+      }
 
-      // create an answer
-      const answer = await peerRef.current.createAnswer();
+      peerRef.current = new RTCPeerConnection();
+      // updatePeer(new RTCPeerConnection());
+
+      // if (!peerRef.current) {
+      //   notifyPeerError();
+      // }
+
+      const peer = peerRef.current;
+
+      const remoteDesc = new RTCSessionDescription(offeredSessionDesc);
+
+      // await peerRef.current.setRemoteDescription(remoteDesc);
+      await peer.setRemoteDescription(remoteDesc);
+
+      // const answer = await peerRef.current.createAnswer();
+      const answer = await peer.createAnswer();
       const localDesc = new RTCSessionDescription(answer);
 
-      peerRef.current.setLocalDescription(localDesc);
+      // peerRef.current.setLocalDescription(localDesc);
+      peer.setLocalDescription(localDesc);
 
       // const answer = await peerConnection.createAnswer();
       emitter.send(socket, {
@@ -125,10 +168,25 @@ const FriendInput = () => {
         if (success) {
           // updateFriendname(answerer);
 
-          if (peerRef.current) {
-            const RemoteDesc = new RTCSessionDescription(answer);
-            await peerRef.current.setRemoteDescription(RemoteDesc);
+          // if (peerRef.current) {
+          //   const RemoteDesc = new RTCSessionDescription(answer);
+          //   await peerRef.current.setRemoteDescription(RemoteDesc);
+          // }
+
+          if (!peerRef) {
+            notifyPeerError();
+            return;
           }
+
+          const peer = peerRef.current;
+
+          if (!peer) {
+            notifyPeerError();
+            return;
+          }
+
+          const RemoteDesc = new RTCSessionDescription(answer);
+          await peer.setRemoteDescription(RemoteDesc);
         } else {
           notifier.toast({
             title: "Oups!",
