@@ -8,8 +8,6 @@ import React, {
 
 interface WebRTCContextValue {
   peerRef: MutableRefObject<RTCPeerConnection | null> | null;
-  // peer: RTCPeerConnection | null;
-  // updatePeer: (newPeer: RTCPeerConnection | null) => void;
 }
 
 const defaultWebRTCContextValue: WebRTCContextValue = {
@@ -29,14 +27,8 @@ interface WebRTCProviderProps {
 export const WebRTCProvider = ({ children }: WebRTCProviderProps) => {
   const peerRef = useRef<RTCPeerConnection | null>(null);
 
-  // const updatePeer = (newPeer: RTCPeerConnection | null) => {
-  //   peerRef.current = newPeer;
-  // };
-
   const value = {
     peerRef,
-    // peer: peerRef.current,
-    // updatePeer,
   };
 
   return (

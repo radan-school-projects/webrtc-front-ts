@@ -15,6 +15,7 @@ import { IResponse } from "../../types";
 import * as notifier from "../../utils/notifier";
 import OfferDialog, { DialogContent } from "./OfferDialog";
 import { useWebRTC } from "../../contexts/webrtc.context";
+import { rtcConfig } from "../../app/webrtc";
 
 const FriendInput = () => {
   const { username, updateFriendname, friendname } = useUser();
@@ -39,6 +40,19 @@ const FriendInput = () => {
     });
   };
 
+  const iceListener = (iceEvent: RTCPeerConnectionIceEvent) => {
+    const { candidate } = iceEvent;
+    if (candidate) {
+      emitter.send(socket, {
+        type: "candidate",
+        content: {
+          candidate,
+          friendname,
+        },
+      });
+    }
+  };
+
   const handleButtonClick: MouseEventHandler<HTMLButtonElement> = async (e) => {
     e.preventDefault();
 
@@ -47,54 +61,62 @@ const FriendInput = () => {
       return;
     }
 
-    peerRef.current = new RTCPeerConnection();
-
+    peerRef.current = new RTCPeerConnection(rtcConfig);
     const peer = peerRef.current;
 
-    if (peer) {
-      const offer = await peer.createOffer();
-      const localDesc = new RTCSessionDescription(offer);
-      peer.setLocalDescription(localDesc);
+    peer.onicecandidate = iceListener;
 
-      emitter.send(socket, {
-        type: "offer",
-        content: {
-          friendname,
-          offer,
-        },
-      });
-    }
+    const offer = await peer.createOffer();
+    const localDesc = new RTCSessionDescription(offer);
+    peer.setLocalDescription(localDesc);
+
+    emitter.send(socket, {
+      type: "offer",
+      content: {
+        friendname,
+        offer,
+      },
+    });
   };
 
   const onAccept = async () => {
     setIsDialogOpen(false);
     updateFriendname(userOffering);
 
-    if (offeredSessionDesc) {
-      if (!peerRef) {
-        notifyPeerError();
-        return;
-      }
-
-      peerRef.current = new RTCPeerConnection();
-      const peer = peerRef.current;
-
-      const remoteDesc = new RTCSessionDescription(offeredSessionDesc);
-      await peer.setRemoteDescription(remoteDesc);
-
-      const answer = await peer.createAnswer();
-      const localDesc = new RTCSessionDescription(answer);
-      peer.setLocalDescription(localDesc);
-
-      emitter.send(socket, {
-        type: "answer",
-        content: {
-          answer,
-          // caller: friendname,
-          caller: userOffering,
-        },
+    if (!offeredSessionDesc) {
+      notifier.toast({
+        status: "error",
+        title: "Offer error",
+        description: "the offer disappeared",
       });
+      return;
     }
+
+    if (!peerRef) {
+      notifyPeerError();
+      return;
+    }
+
+    peerRef.current = new RTCPeerConnection(rtcConfig);
+    const peer = peerRef.current;
+
+    peer.onicecandidate = iceListener;
+
+    const remoteDesc = new RTCSessionDescription(offeredSessionDesc);
+    await peer.setRemoteDescription(remoteDesc);
+
+    const answer = await peer.createAnswer();
+    const localDesc = new RTCSessionDescription(answer);
+    peer.setLocalDescription(localDesc);
+
+    emitter.send(socket, {
+      type: "answer",
+      content: {
+        answer,
+        // caller: friendname,
+        caller: userOffering,
+      },
+    });
   };
   const onRefuse = () => setIsDialogOpen(false);
 
@@ -150,7 +172,33 @@ const FriendInput = () => {
       }
         break;
 
-      default:
+      case "candidate": {
+        const { description, candidate } = content;
+        if (success) {
+          if (!peerRef) {
+            notifyPeerError();
+            return;
+          }
+
+          const peer = peerRef.current;
+
+          if (!peer) {
+            notifyPeerError();
+            return;
+          }
+
+          peer.addIceCandidate(candidate);
+        } else {
+          notifier.toast({
+            title: "Oups!",
+            description,
+            status: "error",
+          });
+        }
+      }
+        break;
+
+      default: // jus do nothing
         break;
     }
   };
