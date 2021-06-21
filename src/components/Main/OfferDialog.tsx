@@ -16,20 +16,14 @@ export interface DialogContent {
 
 interface OfferDialogProps {
   isOpen: boolean;
-  // title: string;
-  // description: string;
   content: DialogContent;
-  // onClose: () => void;
   onAccept: () => void;
   onRefuse: () => void;
 }
 
 const OfferDialog = ({
   isOpen,
-  // title,
-  // description,
   content,
-  // onClose,
   onAccept,
   onRefuse,
 }: OfferDialogProps) => {
@@ -45,12 +39,10 @@ const OfferDialog = ({
       <AlertDialogOverlay>
         <AlertDialogContent>
           <AlertDialogHeader fontSize="lg" fontWeight="bold">
-            {/* Delete Customer */}
             {title}
           </AlertDialogHeader>
 
           <AlertDialogBody>
-            {/* Are you sure? You can't undo this action afterwards. */}
             {description}
           </AlertDialogBody>
 

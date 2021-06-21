@@ -2,13 +2,10 @@ import React, {
   ChangeEventHandler,
   MouseEventHandler,
   useEffect,
-  // useRef,
-  // useState,
 } from "react";
 import {
   Box, Button, Input,
 } from "@chakra-ui/react";
-// import socket from "../../app/socket";
 import * as emitter from "../../utils/emitter";
 import { IResponse } from "../../types";
 import * as notifier from "../../utils/notifier";
@@ -16,9 +13,7 @@ import { useUser } from "../../contexts/user.context";
 import { useSocket } from "../../contexts/socket.context";
 
 const UsernameInput = () => {
-  // const [username, setUsername] = useState<string>("");
   const { username, updateUsername } = useUser();
-  // const socketRef = useRef(socket);
   const { socket } = useSocket();
 
   const handleInputChange: ChangeEventHandler<HTMLInputElement> = (e) => {
@@ -34,35 +29,18 @@ const UsernameInput = () => {
   };
 
   const responseListener = (response: any) => {
-    // console.log("ooiyabou!");
     const { success, type, content } = response as IResponse;
-    // const { success, type, content } = response;
 
     switch (type) {
-      // case "connect": {
-      //   const { connected } = content;
-      //   if (connected) {
-      //     emitter.send(socket, {
-      //       type: "login", // or register, whatever
-      //       content: {
-      //         username,
-      //       },
-      //     });
-      //   }
-      // }
-      //   break;
-
       case "connect": {
         const { description } = content;
         if (success) {
-          // if (socket.connected) {
           emitter.send(socket, {
             type: "login", // or register, whatever
             content: {
               username,
             },
           });
-          // }
         } else {
           notifier.toast({
             status: "error",
@@ -102,7 +80,7 @@ const UsernameInput = () => {
     return () => {
       socket.off("response", responseListener);
     };
-  }, [username/* , connected */]);
+  }, [username]);
 
   return (
     <Box>

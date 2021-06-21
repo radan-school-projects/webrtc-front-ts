@@ -3,7 +3,6 @@ import React, {
   ChangeEventHandler,
   useEffect,
   useState,
-  // useRef,
 } from "react";
 import {
   Box,
@@ -25,27 +24,12 @@ const FriendInput = () => {
     title: "",
     description: "",
   });
-  // const [isOfferAccepted, setIsOfferAccepted] = useState(false);
   const [userOffering, setUserOffering] = useState("");
   const [
     offeredSessionDesc,
     setOfferedSessionDesc,
   ] = useState<RTCSessionDescription | null>(null);
-  // ====
-  // const peerRef = useRef<RTCPeerConnection | null>(null);
-  const {
-    // peer,
-    // updatePeer,
-    peerRef,
-  } = useWebRTC();
-
-  // const notifyClientError = (description: string) => {
-  //   notifier.toast({
-  //     status: "error",
-  //     title: "Client error",
-  //     description,
-  //   });
-  // };
+  const { peerRef } = useWebRTC();
 
   const notifyPeerError = () => {
     notifier.toast({
@@ -59,24 +43,19 @@ const FriendInput = () => {
     e.preventDefault();
 
     if (!peerRef) {
-      // notifyClientError("Peer ref not set properly");
       notifyPeerError();
       return;
     }
 
     peerRef.current = new RTCPeerConnection();
-    // updatePeer(new RTCPeerConnection());
 
     const peer = peerRef.current;
 
     if (peer) {
-      // const offer = await peerRef.current.createOffer();
       const offer = await peer.createOffer();
       const localDesc = new RTCSessionDescription(offer);
-      // peerRef.current.setLocalDescription(localDesc);
       peer.setLocalDescription(localDesc);
 
-      // send that offer
       emitter.send(socket, {
         type: "offer",
         content: {
@@ -89,39 +68,24 @@ const FriendInput = () => {
 
   const onAccept = async () => {
     setIsDialogOpen(false);
-    // setIsOfferAccepted(true);
-    // console.log(userOffering);
     updateFriendname(userOffering);
 
     if (offeredSessionDesc) {
       if (!peerRef) {
-        // notifyClientError("Peer ref not set properly");
         notifyPeerError();
         return;
       }
 
       peerRef.current = new RTCPeerConnection();
-      // updatePeer(new RTCPeerConnection());
-
-      // if (!peerRef.current) {
-      //   notifyPeerError();
-      // }
-
       const peer = peerRef.current;
 
       const remoteDesc = new RTCSessionDescription(offeredSessionDesc);
-
-      // await peerRef.current.setRemoteDescription(remoteDesc);
       await peer.setRemoteDescription(remoteDesc);
 
-      // const answer = await peerRef.current.createAnswer();
       const answer = await peer.createAnswer();
       const localDesc = new RTCSessionDescription(answer);
-
-      // peerRef.current.setLocalDescription(localDesc);
       peer.setLocalDescription(localDesc);
 
-      // const answer = await peerConnection.createAnswer();
       emitter.send(socket, {
         type: "answer",
         content: {
@@ -135,21 +99,17 @@ const FriendInput = () => {
   const onRefuse = () => setIsDialogOpen(false);
 
   const responseListener = async (response: IResponse) => {
-    // console.log("bouuia!!");
-    // const { type, success, content } = response as IResponse;
     const { type, success, content } = response;
 
     switch (type) {
       case "offer": {
         const { description, emitter: expeditor, offer } = content;
         if (success) {
-          // show an alert dialog
           setUserOffering(expeditor);
           setOfferedSessionDesc(offer);
           setDialogContent({
             ...dialogContent,
             title: "Incoming offer",
-            // description: content.description,
             description,
           });
           setIsDialogOpen(true);
@@ -166,13 +126,6 @@ const FriendInput = () => {
       case "answer": {
         const { answer, /* emitter: answerer, */ description } = content;
         if (success) {
-          // updateFriendname(answerer);
-
-          // if (peerRef.current) {
-          //   const RemoteDesc = new RTCSessionDescription(answer);
-          //   await peerRef.current.setRemoteDescription(RemoteDesc);
-          // }
-
           if (!peerRef) {
             notifyPeerError();
             return;
@@ -226,7 +179,6 @@ const FriendInput = () => {
       <OfferDialog
         isOpen={isDialogOpen}
         content={dialogContent}
-        // onClose={onDialogClose}
         onAccept={onAccept}
         onRefuse={onRefuse}
       />
