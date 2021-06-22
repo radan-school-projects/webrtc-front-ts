@@ -30,7 +30,17 @@ const FriendInput = () => {
     offeredSessionDesc,
     setOfferedSessionDesc,
   ] = useState<RTCSessionDescription | null>(null);
-  const { peerRef } = useWebRTC();
+  // const { peerRef, updateLocalStream, remoteStream } = useWebRTC();
+  const {
+    peerRef,
+    remoteStreamRef,
+    localStreamRef,
+    // streamRef,
+    // remoteStream,
+    // localStream,
+    // updateLocalStream,
+    // updateRemoteStream,
+  } = useWebRTC();
 
   const notifyPeerError = () => {
     notifier.toast({
@@ -40,6 +50,7 @@ const FriendInput = () => {
     });
   };
 
+  // // * moved this in webrtc context file
   const iceListener = (iceEvent: RTCPeerConnectionIceEvent) => {
     const { candidate } = iceEvent;
     if (candidate) {
@@ -52,6 +63,21 @@ const FriendInput = () => {
       });
     }
   };
+  // // * moved to wbrtc context
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const connectionListener = (ev: Event) => {
+    notifier.toast({
+      status: "info",
+      title: "Peer connected",
+      description: `You're connected with ${friendname}`,
+    });
+  };
+  const trackListener = async (ev: RTCTrackEvent) => {
+    // streamRef?.current.remote.addTrack(ev.track);
+    // remoteStream.addTrack(ev.track);
+    remoteStreamRef?.current.addTrack(ev.track);
+    // .addTrack(ev.track);
+  };
 
   const handleButtonClick: MouseEventHandler<HTMLButtonElement> = async (e) => {
     e.preventDefault();
@@ -61,10 +87,19 @@ const FriendInput = () => {
       return;
     }
 
-    peerRef.current = new RTCPeerConnection(rtcConfig);
-    const peer = peerRef.current;
+    // peerRef.current = new RTCPeerConnection(rtcConfig);
+    const peer = new RTCPeerConnection(rtcConfig);
+    // const peer = peerRef.current;
 
     peer.onicecandidate = iceListener;
+    peer.onconnectionstatechange = connectionListener;
+    peer.ontrack = trackListener;
+
+    peerRef.current = peer;
+
+    // peer.ontrack = async (ev) => {
+    //   streamRef?.current.remote.addTrack(ev.track);
+    // };
 
     const offer = await peer.createOffer();
     const localDesc = new RTCSessionDescription(offer);
@@ -97,10 +132,20 @@ const FriendInput = () => {
       return;
     }
 
-    peerRef.current = new RTCPeerConnection(rtcConfig);
-    const peer = peerRef.current;
+    // peerRef.current = new RTCPeerConnection(rtcConfig);
+    const peer = new RTCPeerConnection(rtcConfig);
+    // const peer = peerRef.current;
 
     peer.onicecandidate = iceListener;
+    peer.onconnectionstatechange = connectionListener;
+    peer.ontrack = trackListener;
+
+    peerRef.current = peer;
+
+    // peer.ontrack = async (ev) => {
+    //   streamRef?.current.remote.addTrack(ev.track);
+    //   remoteStream.addTrack(ev.track);
+    // };
 
     const remoteDesc = new RTCSessionDescription(offeredSessionDesc);
     await peer.setRemoteDescription(remoteDesc);
@@ -117,6 +162,20 @@ const FriendInput = () => {
         caller: userOffering,
       },
     });
+
+    const localStream1 = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+    // localStream.getTracks().forEach((track) => {
+    //   peer.addTrack(track, localStream1);
+    // });
+    localStreamRef?.current.getTracks().forEach((track) => {
+      peer.addTrack(track, localStream1);
+    });
+    // updateLocalStream(localStream1);
+    (localStreamRef as React.MutableRefObject<MediaStream>).current = localStream1;
+
+    // if (streamRef) {
+    //   streamRef.current.local = localStream;
+    // }
   };
   const onRefuse = () => setIsDialogOpen(false);
 
@@ -162,6 +221,21 @@ const FriendInput = () => {
 
           const RemoteDesc = new RTCSessionDescription(answer);
           await peer.setRemoteDescription(RemoteDesc);
+
+          // peer.ontrack = async (ev) => {
+          //   streamRef?.current.remote.addTrack(ev.track);
+          // };
+
+          // eslint-disable-next-line max-len
+          const localStream1 = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+          // localStream.getTracks().forEach((track) => {
+          //   peer.addTrack(track, localStream1);
+          // });
+          localStreamRef?.current.getTracks().forEach((track) => {
+            peer.addTrack(track, localStream1);
+          });
+          // updateLocalStream(localStream1);
+          (localStreamRef as React.MutableRefObject<MediaStream>).current = localStream1;
         } else {
           notifier.toast({
             title: "Oups!",
@@ -209,6 +283,14 @@ const FriendInput = () => {
       socket.off("response", responseListener);
     };
   }, []);
+
+  // * moved this in webrtc context provider
+  // useEffect(() => {
+  //   peerRef?.current?.addEventListener("icecandidate", iceListener);
+  //   return () => {
+  //     peerRef?.current?.removeEventListener("icecandidate", iceListener);
+  //   };
+  // }, [peerRef, peerRef?.current]);
 
   const handleInputChange: ChangeEventHandler<HTMLInputElement> = (e) => {
     updateFriendname(e.target.value);
