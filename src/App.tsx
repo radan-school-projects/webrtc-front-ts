@@ -2,12 +2,12 @@ import * as React from "react";
 import {
   ChakraProvider,
   theme,
+  Box,
 } from "@chakra-ui/react";
-import { Main } from "./components/main";
 
 const App = () => (
   <ChakraProvider theme={theme}>
-    <Main />
+    <Box>Hello!</Box>
   </ChakraProvider>
 );
 
