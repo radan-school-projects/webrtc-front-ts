@@ -5,21 +5,44 @@ import {
   Button,
   Text,
 } from "@chakra-ui/react";
+import { RouteComponentProps } from "react-router-dom";
 import socket from "../app/socket";
 
-const Home = () => {
+const Home = ({ history }: RouteComponentProps) => {
   const [username, setUsername] = React.useState<string>("");
+  const [friendname, setFriendname] = React.useState<string>("");
+  const [isCalling, setIsCalling] = React.useState<boolean>(false);
 
-  const handleInputChange: React.ChangeEventHandler<HTMLInputElement> = (e) => {
+  const handleUsernameInputChange: React.ChangeEventHandler<HTMLInputElement> = (e) => {
     e.preventDefault();
     setUsername(e.target.value);
   };
 
-  const handleBtnClick: React.MouseEventHandler<HTMLButtonElement> = (e) => {
+  const handleUsernameBtnClick: React.MouseEventHandler<HTMLButtonElement> = (e) => {
     e.preventDefault();
     socket.auth = { username };
     socket.connect();
   };
+
+  const handleFriendnameInputChange: React.ChangeEventHandler<HTMLInputElement> = (e) => {
+    e.preventDefault();
+    setFriendname(e.target.value);
+  };
+
+  const handleFriendnameBtnClick: React.MouseEventHandler<HTMLButtonElement> = (e) => {
+    e.preventDefault();
+    setIsCalling(true);
+  };
+
+  React.useEffect(() => {
+    if (isCalling && socket.connected && username && friendname) {
+      history.push("/room", { friendname, username });
+    } else {
+      setIsCalling(false);
+    }
+  }, [
+    isCalling,
+  ]);
 
   return (
     <Box>
@@ -35,24 +58,28 @@ const Home = () => {
           type="text"
           placeholder="username"
           value={username}
-          onChange={handleInputChange}
+          onChange={handleUsernameInputChange}
         />
         <Button
-          onClick={handleBtnClick}
+          onClick={handleUsernameBtnClick}
         >
           Register
         </Button>
       </Box>
 
-      {/* <Box>
+      <Box>
         <Input
           type="text"
-          placeholder="username"
-          value={username}
-          onChange={handleInputChange}
+          placeholder="friendname"
+          value={friendname}
+          onChange={handleFriendnameInputChange}
         />
-        <Button onClick={handleButtonClick}>Okay</Button>
-      </Box> */}
+        <Button
+          onClick={handleFriendnameBtnClick}
+        >
+          Call
+        </Button>
+      </Box>
     </Box>
   );
 };

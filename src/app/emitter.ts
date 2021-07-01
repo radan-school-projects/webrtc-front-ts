@@ -13,3 +13,5 @@ export const send = (socket: Socket, command: ICommand) => {
 // export const broadcast = (emitter: Socket, response: IResponse) => {
 //   emitter.broadcast.emit("response", response);
 // };
+
+export default { send };
