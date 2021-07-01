@@ -1,22 +1,26 @@
-import * as React from "react";
+import React from "react";
 import {
   ChakraProvider,
   theme,
 } from "@chakra-ui/react";
-import Main from "./Main";
-import { UserProvider } from "./contexts/user.context";
-import { SocketProvider } from "./contexts/socket.context";
-import { WebRTCProvider } from "./contexts/webrtc.context";
+import {
+  BrowserRouter,
+  Switch,
+  Route,
+} from "react-router-dom";
+import {
+  Home,
+  Room,
+} from "./screens";
 
 const App = () => (
   <ChakraProvider theme={theme}>
-    <UserProvider>
-      <SocketProvider>
-        <WebRTCProvider>
-          <Main />
-        </WebRTCProvider>
-      </SocketProvider>
-    </UserProvider>
+    <BrowserRouter>
+      <Switch>
+        <Route exact path="/" component={Home} />
+        <Route path="/room" component={Room} />
+      </Switch>
+    </BrowserRouter>
   </ChakraProvider>
 );
 

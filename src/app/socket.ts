@@ -8,15 +8,16 @@ const socket = io(SOCKET_SERVER_URL, {
 });
 
 socket.onAny((event, ...args) => {
-  const jsonArgs = args.map((arg) => {
-    try {
-      return JSON.parse(arg);
-    } catch (err) {
-      return arg;
-    }
-  });
-  // eslint-disable-next-line no-console
-  console.log(event, jsonArgs);
+  let type: string | null = null;
+  try {
+    type = args[0].type;
+  } finally {
+    console.log(`${event}${type ? `:${type}` : ""}`, args);
+  }
+});
+
+socket.on("connect_error", (error) => {
+  console.error("connect_error", error.message);
 });
 
 export default socket;
