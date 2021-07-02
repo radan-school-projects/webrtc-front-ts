@@ -1,4 +1,6 @@
 import { io } from "socket.io-client";
+import { IResponse } from "../types";
+import notifier from "./notifier";
 
 // use local address IP for tests
 const SOCKET_SERVER_URL = process.env.REACT_APP_SOCKET_SERVER_URL || "http://localhost:3300";
@@ -18,6 +20,17 @@ socket.onAny((event, ...args) => {
 
 socket.on("connect_error", (error) => {
   console.error("connect_error", error.message);
+  notifier.error({
+    description: error.message,
+  });
+});
+
+socket.on("response", (response: IResponse) => {
+  if (response.type === "socket-connect") {
+    notifier.success({
+      description: response.content.description,
+    });
+  }
 });
 
 export default socket;

@@ -4,6 +4,8 @@ import {
   theme,
 } from "@chakra-ui/react";
 import Main from "./Main";
+import "bootstrap/dist/css/bootstrap.min.css";
+import "animate.css/animate.min.css";
 
 const App = () => (
   <ChakraProvider theme={theme}>
