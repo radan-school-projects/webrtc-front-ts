@@ -18,7 +18,6 @@ const Home = ({ history }: RouteComponentProps) => {
   const [friendname, setFriendname] = React.useState<string>("");
 
   const [callername, setCallername] = React.useState<string>("");
-  // const callernameRef = React.useRef<string>("");
 
   const [isCalling, setIsCalling] = React.useState<boolean>(false);
   const [isCalled, setIsCalled] = React.useState<boolean>(false);
@@ -42,29 +41,20 @@ const Home = ({ history }: RouteComponentProps) => {
   };
 
   const onCancelDialing = () => {
-    //   // cancelCall();
-    //   // setIsCalling(false);
-    //   // emitter.send(socket, {
-    //   //    "call-cancel" ...
-    //   // });
     setIsCalling(false);
   };
   const onAcceptIncoming = () => {
-    // acceptCall();
     emitter.send(socket, {
       type: "call-answer",
       content: {
         caller: callername,
-        // target: callernameRef.current,
+
       },
     });
     setIsCallAccepted(true);
   };
   const onDenyIncoming = () => {
-    //   // denyCall();
-    //   // setIsCalled(false);
-    //   // setIsCallAccepted(false);
-    // setCallername("");
+
   };
 
   const handleCallBtnClick: React.MouseEventHandler<HTMLButtonElement> = (e) => {
@@ -82,10 +72,6 @@ const Home = ({ history }: RouteComponentProps) => {
         target: friendname,
       },
     });
-    // alert.dialingCall({
-    //   partner: friendname,
-    //   onCancel: onCancelDialing,
-    // });
   };
 
   const responseEventHandler = (response: IResponse) => {
@@ -94,7 +80,6 @@ const Home = ({ history }: RouteComponentProps) => {
     switch (type) {
       case "call-offer":
         if (success) {
-          // ===
           setCallername(content.caller);
           setIsCalled(true);
         } else {
@@ -112,13 +97,7 @@ const Home = ({ history }: RouteComponentProps) => {
           alert.swalBootstrapBtn.close();
           setIsCalled(false);
           setIsCallAccepted(true);
-          // history.push("/room", {
-          //   friendname,
-          //   // friendname: callernameRef.current,
-          //   username,
-          // });
         } else {
-          // setIsCalled(false);
           notifier.error({
             description: content.description,
           });
@@ -135,8 +114,7 @@ const Home = ({ history }: RouteComponentProps) => {
       socket.off("response", responseEventHandler);
     };
   }, [
-    // responseEventHandler,
-    // callername,
+
   ]);
 
   React.useEffect(() => {
@@ -146,47 +124,26 @@ const Home = ({ history }: RouteComponentProps) => {
         onCancel: onCancelDialing,
       });
     } else {
-      // setIsCalling(false);
-      // alert.swalBootstrapBtn.close();
+      // ? setIsCalling(false); will change nothing cause state is already false
     }
-    // if (isCalled) {
-    //   // alertCall({
-    //   //   type: "incoming",
-    //   //   partner: friendname,
-    //   // });
-    // } else {
-    //   setIsCalled(false);
-    // }
   }, [
     isCalling,
     setIsCalling,
-    // isCalled,
+
   ]);
   React.useEffect(() => {
-    // if (isCalling) {
-    //   alert.dialingCall({
-    //     partner: friendname,
-    //     onCancel: onCancelDialing,
-    //   });
-    // } else {
-    //   setIsCalling(false);
-    // }
     if (isCalled) {
-      // alertCall({
-      //   type: "incoming",
-      //   partner: friendname,
-      // });
       alert.incomingCall({
-        // partner: content.caller,
+
         partner: callername,
         onAccept: onAcceptIncoming,
         onDeny: onDenyIncoming,
       });
-    }/*  else {
-      setIsCalled(false);
-    } */
+    } else {
+      // ? setIsCalled(false); will change nothing cause state is already false
+    }
   }, [
-    // isCalling,
+
     isCalled,
     setIsCalled,
   ]);
@@ -195,7 +152,6 @@ const Home = ({ history }: RouteComponentProps) => {
     if (isCallAccepted) {
       history.push("/room", { friendname, username });
     } else {
-      // setIsCalling(false);
       setIsCallAccepted(false);
     }
   }, [
