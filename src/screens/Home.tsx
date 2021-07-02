@@ -175,9 +175,9 @@ const Home = ({ history }: RouteComponentProps) => {
 
   React.useEffect(() => {
     if (isCallAccepted) {
-      history.push("/room", { friendname, username });
+      history.push("/room", { friendname: isCalling ? friendname : callername, username });
     } else {
-      setIsCallAccepted(false);
+      // setIsCallAccepted(false); // ? useless
     }
   }, [
     isCallAccepted,
