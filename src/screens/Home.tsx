@@ -41,6 +41,13 @@ const Home = ({ history }: RouteComponentProps) => {
   };
 
   const onCancelDialing = () => {
+    emitter.send(socket, {
+      type: "call-offer",
+      content: {
+        target: friendname,
+        cancelling: true,
+      },
+    });
     setIsCalling(false);
     // setFriendname("");
   };
@@ -90,8 +97,16 @@ const Home = ({ history }: RouteComponentProps) => {
     switch (type) {
       case "call-offer":
         if (success) {
-          setCallername(content.caller);
-          setIsCalled(true);
+          // setCallername(content.caller);
+          // setIsCalled(true);
+          if (!content.cancelling) {
+            setCallername(content.caller);
+            setIsCalled(true);
+          } else {
+            setCallername("");
+            setIsCalled(false);
+            alert.swalBootstrapBtn.close();
+          }
         } else {
           setIsCalling(false);
           // setIsCalled(true);
