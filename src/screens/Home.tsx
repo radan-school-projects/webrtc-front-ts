@@ -42,19 +42,29 @@ const Home = ({ history }: RouteComponentProps) => {
 
   const onCancelDialing = () => {
     setIsCalling(false);
+    // setFriendname("");
   };
   const onAcceptIncoming = () => {
     emitter.send(socket, {
       type: "call-answer",
       content: {
         caller: callername,
-
+        accepted: true,
       },
     });
     setIsCallAccepted(true);
   };
   const onDenyIncoming = () => {
-
+    emitter.send(socket, {
+      type: "call-answer",
+      content: {
+        caller: callername,
+        accepted: false,
+      },
+    });
+    setCallername("");
+    setIsCallAccepted(false);
+    setIsCalled(false);
   };
 
   const handleCallBtnClick: React.MouseEventHandler<HTMLButtonElement> = (e) => {
@@ -84,6 +94,7 @@ const Home = ({ history }: RouteComponentProps) => {
           setIsCalled(true);
         } else {
           setIsCalling(false);
+          // setIsCalled(true);
           notifier.error({
             description: content.description,
           });
@@ -93,11 +104,13 @@ const Home = ({ history }: RouteComponentProps) => {
 
       case "call-answer":
         if (success) {
-          console.log(callername, username, friendname);
           alert.swalBootstrapBtn.close();
           setIsCalled(false);
-          setIsCallAccepted(true);
+          // wbehter our friend accepted our call or not
+          setIsCallAccepted(content.accepted);
+          setIsCalling(false);
         } else {
+          // if an error occured while calling
           notifier.error({
             description: content.description,
           });
@@ -129,12 +142,10 @@ const Home = ({ history }: RouteComponentProps) => {
   }, [
     isCalling,
     setIsCalling,
-
   ]);
   React.useEffect(() => {
     if (isCalled) {
       alert.incomingCall({
-
         partner: callername,
         onAccept: onAcceptIncoming,
         onDeny: onDenyIncoming,
@@ -143,7 +154,6 @@ const Home = ({ history }: RouteComponentProps) => {
       // ? setIsCalled(false); will change nothing cause state is already false
     }
   }, [
-
     isCalled,
     setIsCalled,
   ]);
