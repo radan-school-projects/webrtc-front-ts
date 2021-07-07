@@ -1,46 +1,58 @@
-# Getting Started with Create React App
+# WebRTC Frontend Typescript
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+This Repo focuses on building a simple WebRTC chat app with **React** and **Typescript**.
 
-## Available Scripts
+For each branches, the corresponding backend could be found on the branch of the same name in webrtc-back-ts [here](https://github.com/radandevist/webrtc-back-ts).
 
-In the project directory, you can run:
+It uses the [client-react-ts](https://github.com/radandevist/client-react-ts) template.
 
-### `yarn dev`
+## Requirements
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+You need node v14+ and yarn in order to run this project.
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+## Installation
 
-### `yarn test`
+### Clone or download a copy of this repo under the current branch
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+```bash
+git clone https://github.com/radandevist/webrtc-front-ts
 
-### `yarn build`
+// or cloning a specific branch
+git clone -b <branch_name> https://github.com/radandevist/webrtc-front-ts
+```
+### Install the dependencies
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+```bash
+cd webrtc-front-ts
+yarn install
+```
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+### Run for development
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+```bash
+yarn start
+```
 
-### `yarn eject`
+### Build for deployment
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+Generate a production build under the `/build` directory.
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+```bash
+yarn build
+```
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+### Run for development
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+You need a static server in order to run the build files. The [http-server](https://www.npmjs.com/package/http-server) npm package is an excellent one for that purpose.
 
-## Learn More
+Install **http-server** globally first:
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+```bash
+npm install -g http-server
+```
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+use **http-server** to serve the `build` folder:
+
+```bash
+http-server -p 3000 -o ./build
+```
