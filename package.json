@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "@chakra-ui/react": "^1.6.4",
+    "@craco/craco": "^6.3.0",
     "@emotion/react": "^11",
     "@emotion/styled": "^11",
     "@testing-library/jest-dom": "^5.9.0",
@@ -23,13 +24,14 @@
     "react-scripts": "4.0.3",
     "socket.io-client": "^4.1.2",
     "sweetalert2": "^11.0.18",
+    "tailwindcss": "npm:@tailwindcss/postcss7-compat",
     "typescript": "^3.9.5",
     "web-vitals": "^0.2.2"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
+    "start": "craco start",
+    "build": "craco build",
+    "test": "craco test",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
@@ -51,10 +53,12 @@
     "@types/react-router-dom": "^5.1.7",
     "@typescript-eslint/eslint-plugin": "^4.20.0",
     "@typescript-eslint/parser": "^4.20.0",
+    "autoprefixer": "^9",
     "eslint": "^7.23.0",
     "eslint-config-airbnb": "^18.2.1",
     "eslint-plugin-import": "^2.22.1",
     "eslint-plugin-jsx-a11y": "^6.4.1",
-    "eslint-plugin-react": "^7.23.1"
+    "eslint-plugin-react": "^7.23.1",
+    "postcss": "^7"
   }
 }
