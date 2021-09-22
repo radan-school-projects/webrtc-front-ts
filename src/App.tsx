@@ -3,13 +3,28 @@ import {
   ChakraProvider,
   theme,
 } from "@chakra-ui/react";
-import Main from "./Main";
+import {
+  BrowserRouter,
+  Switch,
+  Route,
+} from "react-router-dom";
+
+import {
+  Home,
+  Room,
+} from "./screens";
+
 import "bootstrap/dist/css/bootstrap.min.css";
 import "animate.css/animate.min.css";
 
 const App = () => (
-  <ChakraProvider theme={theme}>
-    <Main />
+  <ChakraProvider theme={theme} resetCSS>
+    <BrowserRouter>
+      <Switch>
+        <Route exact path="/" component={Home} />
+        <Route path="/room" component={Room} />
+      </Switch>
+    </BrowserRouter>
   </ChakraProvider>
 );
 

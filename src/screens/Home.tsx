@@ -4,14 +4,16 @@ import {
   Box,
   Input,
   Button,
-  Text,
+  // Text,
 } from "@chakra-ui/react";
 import { RouteComponentProps } from "react-router-dom";
+
 import socket from "../app/socket";
 import emitter from "../app/emitter";
 import { IResponse } from "../types";
 import notifier from "../app/notifier";
 import alert from "../app/alert";
+import HeaderBanner from "../components/Home/HeaderBanner";
 
 const Home = ({ history }: RouteComponentProps) => {
   const [username, setUsername] = React.useState<string>("");
@@ -189,13 +191,20 @@ const Home = ({ history }: RouteComponentProps) => {
   ]);
 
   return (
-    <Box>
-      <Text>
+    <Box
+      w="100%"
+      h="100vh"
+      bgColor="#f6f6f6"
+    >
+      {/* <Text>
         Hello&nbsp;
         <Box as="span" color="telegram.500">
           {username}
         </Box>
-      </Text>
+      </Text> */}
+
+      {/* Static Banner */}
+      <HeaderBanner />
 
       <Box>
         <Input
