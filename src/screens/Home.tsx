@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-use-before-define */
-/* eslint-disable @typescript-eslint/no-use-before-define */
 import React from "react";
 import {
   Box,
@@ -152,7 +151,10 @@ const Home = ({ history }: RouteComponentProps) => {
         break;
     }
   };
+
   React.useEffect(() => {
+    // setIsCalling(true);
+    // setIsCalled(true);
     socket.on("response", responseEventHandler);
     return () => {
       socket.off("response", responseEventHandler);
@@ -164,7 +166,7 @@ const Home = ({ history }: RouteComponentProps) => {
   React.useEffect(() => {
     if (isCalling) {
       alert.dialingCall({
-        partner: friendname,
+        partner: friendname /* "RadanyBe" */,
         onCancel: onCancelDialing,
       });
     } else {
@@ -178,7 +180,7 @@ const Home = ({ history }: RouteComponentProps) => {
   React.useEffect(() => {
     if (isCalled) {
       alert.incomingCall({
-        partner: callername,
+        partner: callername /* "RadanyBe" */,
         onAccept: onAcceptIncoming,
         onDeny: onDenyIncoming,
       });

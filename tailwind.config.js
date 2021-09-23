@@ -5,7 +5,18 @@ module.exports = {
     extend: {},
   },
   variants: {
-    extend: {},
+    extend: {
+      colors: {
+        purple: {
+          100: "#EEEFF7",
+          500: "#5564A9",
+        },
+        yellow: {
+          100: "#FEFBF5",
+          500: "#F58E1F",
+        },
+      },
+    },
   },
   plugins: [],
 };
