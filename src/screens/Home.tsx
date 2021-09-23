@@ -1,9 +1,10 @@
 /* eslint-disable @typescript-eslint/no-use-before-define */
+/* eslint-disable @typescript-eslint/no-use-before-define */
 import React from "react";
 import {
   Box,
-  Input,
-  Button,
+  Flex,
+  Container,
   // Text,
 } from "@chakra-ui/react";
 import { RouteComponentProps } from "react-router-dom";
@@ -14,6 +15,9 @@ import { IResponse } from "../types";
 import notifier from "../app/notifier";
 import alert from "../app/alert";
 import HeaderBanner from "../components/Home/HeaderBanner";
+import SignInForm from "../components/Home/SignInForm";
+import FriendNameForm from "../components/Home/FriendNameForm";
+import ColorModeSwitcher from "../components/ColorModeSwitcher";
 
 const Home = ({ history }: RouteComponentProps) => {
   const [username, setUsername] = React.useState<string>("");
@@ -25,6 +29,8 @@ const Home = ({ history }: RouteComponentProps) => {
   const [isCalled, setIsCalled] = React.useState<boolean>(false);
 
   const [isCallAccepted, setIsCallAccepted] = React.useState<boolean>(false);
+
+  const [socketConnected, setSocketConnected] = React.useState<boolean>(socket.connected);
 
   const handleUsernameInputChange: React.ChangeEventHandler<HTMLInputElement> = (e) => {
     e.preventDefault();
@@ -97,6 +103,14 @@ const Home = ({ history }: RouteComponentProps) => {
     const { type, content, success } = response;
 
     switch (type) {
+      case "socket-connect":
+        // if (success) {
+        //   setSocketConnected(true);
+        // } else {
+        //   setSocketConnected(false);
+        // }
+        setSocketConnected(success);
+        break;
       case "call-offer":
         if (success) {
           // setCallername(content.caller);
@@ -160,6 +174,7 @@ const Home = ({ history }: RouteComponentProps) => {
     isCalling,
     setIsCalling,
   ]);
+
   React.useEffect(() => {
     if (isCalled) {
       alert.incomingCall({
@@ -191,49 +206,65 @@ const Home = ({ history }: RouteComponentProps) => {
   ]);
 
   return (
-    <Box
-      w="100%"
-      h="100vh"
+    <Flex
       bgColor="#f6f6f6"
+      h="100vh"
+      flexDir="column"
     >
-      {/* <Text>
-        Hello&nbsp;
-        <Box as="span" color="telegram.500">
-          {username}
+      {/* AppBar */}
+      <Container
+        maxW="container.lg"
+        boxShadow="0px 2px 4px rgba(100,100,100,0.5)"
+      >
+        <Flex
+          justifyContent="space-between"
+          alignItems="center"
+          h="3.6rem"
+        >
+          {/* Logo */}
+          <Box
+            fontSize="1.6rem"
+            fontWeight="bold"
+          >
+            W
+          </Box>
+
+          {/* Menu */}
+          <Box>
+            <ColorModeSwitcher />
+          </Box>
+        </Flex>
+      </Container>
+
+      <Box
+        flexGrow={1}
+      >
+        <Box
+          pos="relative"
+          top="50%"
+          transform="translateY(-50%)"
+        >
+          {/* Static Banner */}
+          <HeaderBanner />
+
+          {(!socketConnected)
+            ? (
+              <SignInForm
+                username={username}
+                handleUsernameInputChange={handleUsernameInputChange}
+                handleRegisterBtnClick={handleRegisterBtnClick}
+              />
+            )
+            : (
+              <FriendNameForm
+                friendname={friendname}
+                handleFriendNameInputChange={handleFriendnameInputChange}
+                handleCallButtonClick={handleCallBtnClick}
+              />
+            )}
         </Box>
-      </Text> */}
-
-      {/* Static Banner */}
-      <HeaderBanner />
-
-      <Box>
-        <Input
-          type="text"
-          placeholder="username"
-          value={username}
-          onChange={handleUsernameInputChange}
-        />
-        <Button
-          onClick={handleRegisterBtnClick}
-        >
-          Register
-        </Button>
       </Box>
-
-      <Box>
-        <Input
-          type="text"
-          placeholder="friendname"
-          value={friendname}
-          onChange={handleFriendnameInputChange}
-        />
-        <Button
-          onClick={handleCallBtnClick}
-        >
-          Call
-        </Button>
-      </Box>
-    </Box>
+    </Flex>
   );
 };
 

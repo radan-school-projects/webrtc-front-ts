@@ -10,20 +10,25 @@ import VideoChatImage from "../../assets/video-chat.svg";
 const HeaderBanner = () => (
   <Box
     pos="relative"
-    h="268px"
+    h="16rem"
+    w="100vw"
+    overflowX="hidden"
   >
     <Image
       src={VideoChatImage}
       w="58%"
       m="0 auto"
+      pt="2rem"
     />
     <Text
       fontSize="1.5rem"
+      fontWeight="semibold"
       color="#5564A9"
       textTransform="capitalize"
       pos="absolute"
       top="0"
-      left="0"
+      left="50%"
+      transform="translateX(-78%)"
     >
       Chat with your&nbsp;
       <br />
@@ -36,9 +41,10 @@ const HeaderBanner = () => (
     </Text>
     <Text
       fontSize="1.5rem"
+      fontWeight="semibold"
       color="#5564A9"
-      pos="absolute"
-      // right="0"
+      pos="relative"
+      left="50%"
     >
       On The Fly
     </Text>
