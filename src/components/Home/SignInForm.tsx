@@ -29,9 +29,15 @@ const SigninForm = ({
     <Text
       fontSize="2.3rem"
       color="#F58E1F"
-      mb="1.1rem"
     >
       Sign In
+    </Text>
+    <Text
+      color="#7C85A7"
+      mt="-0.5rem"
+      mb="1.1rem"
+    >
+      Choose an easy id
     </Text>
     <Input
       type="text"

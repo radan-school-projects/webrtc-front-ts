@@ -7,19 +7,35 @@ import {
 
 import VideoChatImage from "../../assets/video-chat.svg";
 
-const HeaderBanner = () => (
+const HeaderBanner = ({ username }: { username: string }) => (
   <Box
     pos="relative"
-    h="16rem"
-    w="100vw"
-    overflowX="hidden"
+    // minH="16rem"
+    w="fill"
+    m="0 auto"
+    // overflowX="hidden"
   >
-    <Image
-      src={VideoChatImage}
-      w="58%"
+    <Box
+      w="14rem"
       m="0 auto"
-      pt="2rem"
-    />
+      pos="relative"
+    >
+      <Box
+        w="14rem"
+        h="14rem"
+        m="0 auto"
+        bgColor="#EBEDF6"
+        borderRadius="16rem"
+      />
+      <Image
+        src={VideoChatImage}
+        w="100%"
+        pos="absolute"
+        top="50%"
+        transform="translateY(-50%)"
+        mt="0.5rem"
+      />
+    </Box>
     <Text
       fontSize="1.5rem"
       fontWeight="semibold"
@@ -29,6 +45,7 @@ const HeaderBanner = () => (
       top="0"
       left="50%"
       transform="translateX(-78%)"
+      visibility={!username ? "visible" : "hidden"}
     >
       Chat with your&nbsp;
       <br />
@@ -42,11 +59,24 @@ const HeaderBanner = () => (
     <Text
       fontSize="1.5rem"
       fontWeight="semibold"
-      color="#5564A9"
-      pos="relative"
-      left="50%"
+      // color="#5564A9"
+      color="#7C85A7"
+      w="full"
+      textAlign="center"
+      visibility={username ? "visible" : "hidden"}
+      position="absolute"
+      top="0"
+      // mt="-2rem"
     >
-      On The Fly
+      {`hi @${username}`}
+      {/* Hi&nbsp;
+      @
+      <Box
+        as="span"
+        color="#F58E1F"
+      >
+        {username}
+      </Box> */}
     </Text>
   </Box>
 );

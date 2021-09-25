@@ -24,14 +24,20 @@ const FriendName = ({
     <Text
       color="#7C85A7"
     >
-      Then
+      Now Try To
     </Text>
     <Text
       fontSize="2.3rem"
       color="#F58E1F"
-      mb="1.1rem"
     >
       Call People
+    </Text>
+    <Text
+      color="#7C85A7"
+      mt="-0.5rem"
+      mb="1.1rem"
+    >
+      Or wait them to call you
     </Text>
     <Input
       type="text"

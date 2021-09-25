@@ -153,8 +153,11 @@ const Home = ({ history }: RouteComponentProps) => {
   };
 
   React.useEffect(() => {
+    // setSocketConnected(true);
     // setIsCalling(true);
     // setIsCalled(true);
+    // setUsername("storm_trooper3000");
+    // setUsername("");
     socket.on("response", responseEventHandler);
     return () => {
       socket.off("response", responseEventHandler);
@@ -211,59 +214,69 @@ const Home = ({ history }: RouteComponentProps) => {
     <Flex
       bgColor="#f6f6f6"
       h="100vh"
+      // minH="100vh"
       flexDir="column"
+      overflowX="hidden"
     >
       {/* AppBar */}
-      <Container
-        maxW="container.lg"
+      <Box
         boxShadow="0px 2px 4px rgba(100,100,100,0.5)"
       >
-        <Flex
-          justifyContent="space-between"
-          alignItems="center"
-          h="3.6rem"
+        <Container
+          maxW="container.lg"
         >
-          {/* Logo */}
-          <Box
-            fontSize="1.6rem"
-            fontWeight="bold"
+          <Flex
+            justifyContent="space-between"
+            alignItems="center"
+            h="3.6rem"
           >
-            W
-          </Box>
+            {/* Logo */}
+            <Box
+              fontSize="1.6rem"
+              fontWeight="bold"
+            >
+              W
+            </Box>
 
-          {/* Menu */}
-          <Box>
-            <ColorModeSwitcher />
-          </Box>
-        </Flex>
-      </Container>
+            {/* Menu */}
+            <Box>
+              <ColorModeSwitcher />
+            </Box>
+          </Flex>
+        </Container>
+      </Box>
 
       <Box
         flexGrow={1}
       >
         <Box
-          pos="relative"
+          // maxW="container.lg"
+          position="relative"
           top="50%"
           transform="translateY(-50%)"
         >
           {/* Static Banner */}
-          <HeaderBanner />
+          <HeaderBanner username={socketConnected ? username : ""} />
 
-          {(!socketConnected)
-            ? (
-              <SignInForm
-                username={username}
-                handleUsernameInputChange={handleUsernameInputChange}
-                handleRegisterBtnClick={handleRegisterBtnClick}
-              />
-            )
-            : (
-              <FriendNameForm
-                friendname={friendname}
-                handleFriendNameInputChange={handleFriendnameInputChange}
-                handleCallButtonClick={handleCallBtnClick}
-              />
-            )}
+          <Container
+            maxW="container.lg"
+          >
+            {(!socketConnected)
+              ? (
+                <SignInForm
+                  username={username}
+                  handleUsernameInputChange={handleUsernameInputChange}
+                  handleRegisterBtnClick={handleRegisterBtnClick}
+                />
+              )
+              : (
+                <FriendNameForm
+                  friendname={friendname}
+                  handleFriendNameInputChange={handleFriendnameInputChange}
+                  handleCallButtonClick={handleCallBtnClick}
+                />
+              )}
+          </Container>
         </Box>
       </Box>
     </Flex>
