@@ -1,7 +1,7 @@
 import React from "react";
 import {
   ChakraProvider,
-  theme,
+  // theme,
 } from "@chakra-ui/react";
 import {
   BrowserRouter,
@@ -13,8 +13,9 @@ import {
   Home,
   Room,
 } from "./screens";
+import theme from "./theme";
 
-import "bootstrap/dist/css/bootstrap.min.css";
+// import "bootstrap/dist/css/bootstrap.min.css";
 import "animate.css/animate.min.css";
 import "tailwindcss/tailwind.css";
 

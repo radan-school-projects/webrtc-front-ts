@@ -7,10 +7,6 @@ interface IncomingCallParams {
 }
 
 const swalBootstrapBtn = Swal.mixin({
-  customClass: {
-    confirmButton: "btn btn-success",
-    cancelButton: "btn btn-danger",
-  },
   buttonsStyling: false,
   width: "20rem",
 });
