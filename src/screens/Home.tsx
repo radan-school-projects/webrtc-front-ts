@@ -14,8 +14,7 @@ import { IResponse } from "../types";
 import notifier from "../app/notifier";
 import alert from "../app/alert";
 import HeaderBanner from "../components/Home/HeaderBanner";
-import SignInForm from "../components/Home/SignInForm";
-import FriendNameForm from "../components/Home/FriendNameForm";
+import { SignInForm, FriendNameForm } from "../components/Home/Forms";
 import ColorModeSwitcher from "../components/ColorModeSwitcher";
 
 const Home = ({ history }: RouteComponentProps) => {
@@ -153,10 +152,12 @@ const Home = ({ history }: RouteComponentProps) => {
   };
 
   React.useEffect(() => {
-    // setSocketConnected(true);
-    // setIsCalling(true);
+    // setSocketConnected(false);
+    // setUsername("");
+    // setFriendname("alefa");
+    // setIsCalling(false);
+    // setCallername("borodin");
     // setIsCalled(true);
-    // setUsername("storm_trooper3000");
     // setUsername("");
     socket.on("response", responseEventHandler);
     return () => {
@@ -254,29 +255,38 @@ const Home = ({ history }: RouteComponentProps) => {
           position="relative"
           top="50%"
           transform="translateY(-50%)"
+          display={{ lg: "flex" }}
+          justifyContent={{ lg: "space-between" }}
+          alignItems={{ lg: "center" }}
+          maxW={{ lg: "container.lg" }}
+          m={{ lg: "0 auto" }}
+          // bgColor="red.400"
         >
           {/* Static Banner */}
-          <HeaderBanner username={socketConnected ? username : ""} />
+          <HeaderBanner
+            username={socketConnected ? username : ""}
+          />
 
-          <Container
-            maxW="container.lg"
+          <Box
+            maxW={{ base: "container.lg", lg: "unset" }}
+            // w={{ lg: "40%" }}
           >
             {(!socketConnected)
               ? (
                 <SignInForm
-                  username={username}
-                  handleUsernameInputChange={handleUsernameInputChange}
-                  handleRegisterBtnClick={handleRegisterBtnClick}
+                  name={username}
+                  handleNameInputChange={handleUsernameInputChange}
+                  buttonAction={handleRegisterBtnClick}
                 />
               )
               : (
                 <FriendNameForm
-                  friendname={friendname}
-                  handleFriendNameInputChange={handleFriendnameInputChange}
-                  handleCallButtonClick={handleCallBtnClick}
+                  name={friendname}
+                  handleNameInputChange={handleFriendnameInputChange}
+                  buttonAction={handleCallBtnClick}
                 />
               )}
-          </Container>
+          </Box>
         </Box>
       </Box>
     </Flex>
