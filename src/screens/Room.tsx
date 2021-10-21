@@ -4,7 +4,10 @@ import React from "react";
 import {
   Box,
   Flex,
-  Text,
+  Button,
+  Image,
+  // AspectRatio,
+  // Text,
 } from "@chakra-ui/react";
 import { RouteComponentProps } from "react-router-dom";
 import socket from "../app/socket";
@@ -12,6 +15,7 @@ import emitter from "../app/emitter";
 import { IResponse } from "../types";
 import notifier from "../app/notifier";
 import { rtcConfig } from "../app/webrtc";
+import src from "../assets/phone-svgrepo-com.svg";
 
 interface Params {}
 interface SaticConText {}
@@ -21,7 +25,17 @@ interface State {
   isCaller: boolean;
 }
 
-const Room = ({ location: { state } }: RouteComponentProps<Params, SaticConText, State>) => {
+const tempDefaultState: State = {
+  friendname: "strawberry",
+  username: "marbblejelly",
+  isCaller: true,
+};
+
+const Room = ({
+  location: {
+    state = tempDefaultState,
+  },
+}: RouteComponentProps<Params, SaticConText, State>) => {
   /**
    * Stored this as a state because later while chatting,
    * someone else would like to join
@@ -38,6 +52,8 @@ const Room = ({ location: { state } }: RouteComponentProps<Params, SaticConText,
 
   // const otherUser = React.useRef<string>();
   const userStream = React.useRef<MediaStream>();
+
+  const [partnerAspectRatio, setPartnerAspectRatio] = React.useState<number>();
 
   const responseEventHandler = (response: IResponse) => {
     const { type, success, content } = response;
@@ -134,6 +150,15 @@ const Room = ({ location: { state } }: RouteComponentProps<Params, SaticConText,
         userVideoRef.current!.srcObject = stream;
         userStream.current = stream;
 
+        // ! IDK
+        setPartnerAspectRatio(stream.getVideoTracks()[0].getSettings().aspectRatio);
+        // console.log(partnerAspectRatio);
+
+        // ! Just for UI Dev purpose
+        partnerVideoRef.current!.srcObject = stream;//! remove this line!!!
+        // const elem = document.documentElement;
+        // elem.requestFullscreen();
+
         if (isCaller) { // * Call our partner
           peerRef.current = createPeer();
 
@@ -175,28 +200,89 @@ const Room = ({ location: { state } }: RouteComponentProps<Params, SaticConText,
   ]);
 
   return (
-    <Box>
-      <Text fontSize="4xl" color={socket.connected ? "tomato" : "black"}>This is a room</Text>
+    <Box
+      h="100vh"
+      w="100vw"
+      overflowX="hidden"
+    >
+      {/* <Text fontSize="4xl" color={socket.connected ? "tomato" : "black"}>This is a room</Text>
       <Text fontSize="4xl">
         Your name is&nbsp;
         {state.username}
         &nbsp;
         and you&apos;ll chat with&nbsp;
         {state.friendname}
-      </Text>
-      <Flex>
-        <Box>
-          <Text fontSize="xl">You</Text>
-          <video autoPlay ref={userVideoRef}>
-            <track kind="captions" />
-          </video>
-        </Box>
-        <Box>
-          <Text fontSize="xl">Your friend</Text>
-          <video autoPlay ref={partnerVideoRef}>
-            <track kind="captions" />
-          </video>
-        </Box>
+      </Text> */}
+
+      <Flex
+        // w="6rem"
+        // h="8rem"
+        // bgColor="blue"
+        pos="absolute"
+        top="1rem"
+        left="1rem"
+        // borderRadius="0.5rem"
+        // borderColor="#F58E1F"
+        // borderWidth="0.2rem"
+        alignItems="center"
+        // as={motion.div} import { motion } from "framer-motion"
+        // dragConstraints={{
+        //   top: 0,
+        //   left: 0,
+        //   right: 100,
+        //   bottom: 100,
+        // }}
+      >
+        {/* <Text fontSize="xl">{`You(${state.username})`}</Text> */}
+        {/* <AspectRatio maxW="8rem"> */}
+        <video
+          autoPlay
+          ref={userVideoRef}
+          className={`
+            rounded-lg
+            ${
+              partnerAspectRatio && partnerAspectRatio === (4 / 3 || 16 / 9)
+                ? "w-32" : "w-24"
+            }
+          `}
+        >
+          <track kind="captions" />
+        </video>
+        {/* </AspectRatio> */}
+      </Flex>
+      <Flex
+        w="100%"
+        h="100%"
+        bgColor="#F6F6F6"
+        alignItems="center"
+      >
+        {/* <Text fontSize="xl">{`${state.friendname}`}</Text> */}
+        <video
+          autoPlay
+          ref={partnerVideoRef}
+        >
+          <track kind="captions" />
+        </video>
+        <Button
+          colorScheme="red"
+          position="absolute"
+          bottom="1.8rem"
+          left="50%"
+          transform="translateX(-50%)"
+          w="3.4rem"
+          h="3.4rem"
+          borderRadius="20rem"
+          className="elevation"
+        >
+          {/* End Call */}
+          {/* <EndCallIcon
+            fill="#fff"
+          /> */}
+          <Image
+            src={src}
+            w="full"
+          />
+        </Button>
       </Flex>
     </Box>
   );
