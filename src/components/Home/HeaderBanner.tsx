@@ -81,8 +81,9 @@ const HeaderBanner: ChakraComponent<typeof Box, HeaderBannerProps> = (
       visibility={username ? "visible" : "hidden"}
       position="absolute"
       top="0"
-      left={{ md: "0" }}
-      mt={{ base: "-0.5rem", md: "2rem" }}
+      left={{ md: "0", lg: "50%" }}
+      transform={{ lg: "translateX(-50%)" }}
+      mt={{ base: "-0.5rem", md: "1.8rem" }}
     >
       {/* {`hi @${username}`} */}
       Hi&nbsp;
