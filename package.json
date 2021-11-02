@@ -34,9 +34,6 @@
     "build": "tsc && vite build",
     "serve": "vite preview"
   },
-  "eslintConfig": {
-    "extends": "react-app"
-  },
   "browserslist": {
     "production": [
       ">0.2%",
