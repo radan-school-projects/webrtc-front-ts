@@ -38,7 +38,7 @@ const incomingCall = ({
     cancelButtonText: "deny",
     reverseButtons: true,
     allowOutsideClick,
-    imageUrl: "/waving-hand.gif",
+    imageUrl: "/images/call/waving-hand.gif",
     customClass: {
       popup: "rounded-lg",
       image: "w-24 h-24 mt-3 mb-0",
@@ -75,7 +75,7 @@ const dialingCall = ({
     cancelButtonText: "Cancel Call",
     reverseButtons: false,
     allowOutsideClick,
-    imageUrl: "/call-me-hand.gif",
+    imageUrl: "/images/call/call-me-hand.gif",
     customClass: {
       popup: "rounded-lg",
       image: "w-24 h-24 mt-3 mb-0",

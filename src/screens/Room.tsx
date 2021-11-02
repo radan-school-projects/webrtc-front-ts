@@ -15,7 +15,7 @@ import emitter from "../app/emitter";
 import { IResponse } from "../types";
 import notifier from "../app/notifier";
 import { rtcConfig } from "../app/webrtc";
-import src from "../assets/phone-svgrepo-com.svg";
+import src from "../images/room/phone-icon.svg";
 
 interface Params {}
 interface SaticConText {}

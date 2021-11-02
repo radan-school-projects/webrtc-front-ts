@@ -7,7 +7,7 @@ import {
   ChakraProps,
 } from "@chakra-ui/react";
 
-import VideoChatImage from "../../assets/video-chat.svg";
+import VideoChatImage from "../../images/home/video-chat.svg";
 
 type HeaderBannerProps = ChakraProps & { username: string }
 
