@@ -3,7 +3,9 @@ import { IResponse } from "../types";
 import notifier from "./notifier";
 
 // use local address IP for tests
-const SOCKET_SERVER_URL = process.env.REACT_APP_SOCKET_SERVER_URL // * to use wit cra
+const SOCKET_SERVER_URL =
+  // process.env.REACT_APP_SOCKET_SERVER_URL // * to use wit cra
+  import.meta.env.VITE_SOCKET_SERVER_URL // * to use with vite
   || "http://localhost:3300";
 const socket = io(SOCKET_SERVER_URL, {
   autoConnect: false,
