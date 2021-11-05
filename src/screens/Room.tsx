@@ -7,7 +7,7 @@ import {
   Button,
   Image,
   // AspectRatio,
-  // Text,
+  Text,
 } from "@chakra-ui/react";
 import { RouteComponentProps } from "react-router-dom";
 import socket from "../app/socket";
@@ -44,6 +44,9 @@ const Room = ({
    */
   const isCaller = React.useState<boolean>(state.isCaller);
 
+  // const [isFullScreen, setIsFullScreen] = React.useState<boolean>(false);
+  const [fullScreenElement, setFullScreenElement] = React.useState(document.fullscreenElement);
+
   const userVideoRef = React.useRef<HTMLVideoElement>(null);
   const partnerVideoRef = React.useRef<HTMLVideoElement>(null);
 
@@ -53,7 +56,7 @@ const Room = ({
   // const otherUser = React.useRef<string>();
   const userStream = React.useRef<MediaStream>();
 
-  const [partnerAspectRatio, setPartnerAspectRatio] = React.useState<number>();
+  const [userAspectRatio, setUserAspectRatio] = React.useState<number>();
 
   const responseEventHandler = (response: IResponse) => {
     const { type, success, content } = response;
@@ -151,8 +154,8 @@ const Room = ({
         userStream.current = stream;
 
         // ! IDK
-        setPartnerAspectRatio(stream.getVideoTracks()[0].getSettings().aspectRatio);
-        // console.log(partnerAspectRatio);
+        setUserAspectRatio(stream.getVideoTracks()[0].getSettings().aspectRatio);
+        // console.log(userAspectRatio);
 
         // ! Just for UI Dev purpose
         partnerVideoRef.current!.srcObject = stream;//! remove this line!!!
@@ -199,6 +202,42 @@ const Room = ({
 
   ]);
 
+  // React.useEffect(() => {
+  //   const fullScreenElement = document.fullscreenElement;
+  //   // If no element is in full-screen
+  //   if (fullScreenElement !== null) {
+  //     // console.log("FullScreen mode is activated");
+  //     setIsFullScreen(true);
+  //   } else {
+  //     // console.log("FullScreen mode is not activated");
+  //     setIsFullScreen(false);
+  //   }
+  // }, [
+  //   // document.fullscreenElement,
+  //   isFullScreen,
+  //   setIsFullScreen,
+  // ]);
+  React.useEffect(() => {
+    const fullscreenchangeHandler = () => {
+      setFullScreenElement(document.fullscreenElement);
+      // fullScreenElementRef.current = document.fullscreenElement;
+    };
+
+    document.addEventListener("fullscreenchange", fullscreenchangeHandler);
+
+    return () => {
+      document.removeEventListener("fullscreenchange", fullscreenchangeHandler);
+    };
+  }, [
+
+  ]);
+
+  function makeFullScreen() {
+    // setIsFullScreen(true);
+    const elem = document.documentElement;
+    elem.requestFullscreen();
+  }
+
   return (
     <Box
       h="100vh"
@@ -213,7 +252,29 @@ const Room = ({
         and you&apos;ll chat with&nbsp;
         {state.friendname}
       </Text> */}
-
+      <Box
+        zIndex="999"
+        pos="absolute"
+        top="0"
+        right="0"
+        bottom="0"
+        left="0"
+        w="100vw"
+        h="100vh"
+        bgColor="rgba(21, 21, 21, 0.5)"
+        onClick={makeFullScreen}
+        // d={isFullScreen ? "none" : "flex"}
+        d={fullScreenElement === null ? "flex" : "none"}
+        alignItems="center"
+        justifyContent="center"
+      >
+        <Text
+          color="white"
+          fontSize="2xl"
+        >
+          Tap Here To Enter FullScreen
+        </Text>
+      </Box>
       <Flex
         // w="6rem"
         // h="8rem"
@@ -232,6 +293,7 @@ const Room = ({
         //   right: 100,
         //   bottom: 100,
         // }}
+        maxW="25%"
       >
         {/* <Text fontSize="xl">{`You(${state.username})`}</Text> */}
         {/* <AspectRatio maxW="8rem"> */}
@@ -239,9 +301,9 @@ const Room = ({
           autoPlay
           ref={userVideoRef}
           className={`
-            rounded-lg
+            rounded-md
             ${
-              partnerAspectRatio && partnerAspectRatio === (4 / 3 || 16 / 9)
+              userAspectRatio && userAspectRatio === (4 / 3 || 16 / 9)
                 ? "w-32" : "w-24"
             }
           `}
