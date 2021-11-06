@@ -5,17 +5,20 @@ import {
   Box,
   Flex,
   Button,
-  Image,
+  // Image,
   // AspectRatio,
   Text,
 } from "@chakra-ui/react";
 import { RouteComponentProps } from "react-router-dom";
+import { AiOutlineFullscreen } from "react-icons/ai";
+import { FiPhoneOff } from "react-icons/fi";
+
 import socket from "../app/socket";
 import emitter from "../app/emitter";
 import { IResponse } from "../types";
 import notifier from "../app/notifier";
 import { rtcConfig } from "../app/webrtc";
-import src from "../images/room/phone-icon.svg";
+// import src from "../images/room/phone-icon.svg";
 
 interface Params {}
 interface SaticConText {}
@@ -264,9 +267,14 @@ const Room = ({
         bgColor="rgba(21, 21, 21, 0.5)"
         onClick={makeFullScreen}
         // d={isFullScreen ? "none" : "flex"}
-        d={fullScreenElement === null ? "flex" : "none"}
+        d={{
+          base: fullScreenElement === null ? "flex" : "none",
+          lg: "none",
+        }}
+        // d={{}}
         alignItems="center"
         justifyContent="center"
+        cursor="pointer"
       >
         <Text
           color="white"
@@ -280,8 +288,14 @@ const Room = ({
         // h="8rem"
         // bgColor="blue"
         pos="absolute"
-        top="1rem"
-        left="1rem"
+        top={{
+          base: "1rem",
+          md: "1.5rem",
+        }}
+        left={{
+          base: "1rem",
+          md: "1.5rem",
+        }}
         // borderRadius="0.5rem"
         // borderColor="#F58E1F"
         // borderWidth="0.2rem"
@@ -293,7 +307,10 @@ const Room = ({
         //   right: 100,
         //   bottom: 100,
         // }}
-        maxW="25%"
+        // maxW={{
+        //   base: "",
+        //   md: "33%",
+        // }}
       >
         {/* <Text fontSize="xl">{`You(${state.username})`}</Text> */}
         {/* <AspectRatio maxW="8rem"> */}
@@ -303,8 +320,8 @@ const Room = ({
           className={`
             rounded-md
             ${
-              userAspectRatio && userAspectRatio === (4 / 3 || 16 / 9)
-                ? "w-32" : "w-24"
+              userAspectRatio && (userAspectRatio === (4 / 3 || 16 / 9))
+                ? "w-32 md:w-44" : "w-28 md:w-36"
             }
           `}
         >
@@ -313,8 +330,8 @@ const Room = ({
         {/* </AspectRatio> */}
       </Flex>
       <Flex
-        w="100%"
-        h="100%"
+        w="full"
+        h="full"
         bgColor="#F6F6F6"
         alignItems="center"
       >
@@ -322,29 +339,65 @@ const Room = ({
         <video
           autoPlay
           ref={partnerVideoRef}
+          className="h-full my-0 mx-auto"
         >
           <track kind="captions" />
         </video>
-        <Button
-          colorScheme="red"
+        <Box
+          position="absolute"
+          bottom="1.8rem"
+          left="50%"
+          transform="translateX(-250%)"
+          // mr="3rem"
+          d={{
+            base: "none",
+            lg: "block",
+          }}
+        >
+          <Button
+            colorScheme="whiteAlpha"
+            w="3.4rem"
+            h="3.4rem"
+            borderRadius="20rem"
+            className="elevation"
+            onClick={makeFullScreen}
+          >
+            {/* End Call */}
+            {/* <EndCallIcon
+              fill="#fff"
+            /> */}
+            <AiOutlineFullscreen
+              className="text-9xl font-black"
+              // width="100%"
+            />
+          </Button>
+        </Box>
+        <Box
           position="absolute"
           bottom="1.8rem"
           left="50%"
           transform="translateX(-50%)"
-          w="3.4rem"
-          h="3.4rem"
-          borderRadius="20rem"
-          className="elevation"
         >
-          {/* End Call */}
-          {/* <EndCallIcon
-            fill="#fff"
-          /> */}
-          <Image
-            src={src}
-            w="full"
-          />
-        </Button>
+          <Button
+            colorScheme="red"
+            w="3.4rem"
+            h="3.4rem"
+            borderRadius="20rem"
+            className="elevation"
+          >
+            {/* End Call */}
+            {/* <EndCallIcon
+              fill="#fff"
+            /> */}
+            {/* <Image
+              src={src}
+              w="full"
+            /> */}
+            <FiPhoneOff
+              className=" text-xl font-black"
+            />
+          </Button>
+        </Box>
       </Flex>
     </Box>
   );

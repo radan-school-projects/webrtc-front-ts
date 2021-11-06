@@ -15,7 +15,6 @@ import {
 } from "./screens";
 import theme from "./theme";
 
-// import "bootstrap/dist/css/bootstrap.min.css";
 import "animate.css/animate.min.css";
 import "tailwindcss/tailwind.css";
 import "./css/app.css";
