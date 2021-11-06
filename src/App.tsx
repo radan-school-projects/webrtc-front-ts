@@ -15,6 +15,7 @@ import {
 } from "./screens";
 import theme from "./theme";
 
+import "sweetalert2/src/sweetalert2.scss";
 import "animate.css/animate.min.css";
 import "tailwindcss/tailwind.css";
 import "./css/app.css";
