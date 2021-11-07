@@ -1,12 +1,9 @@
 /* eslint-disable prefer-destructuring */
-/* eslint-disable @typescript-eslint/no-use-before-define */
 import React from "react";
 import {
   Box,
   Flex,
   Button,
-  // Image,
-  // AspectRatio,
   Text,
 } from "@chakra-ui/react";
 import { RouteComponentProps } from "react-router-dom";
@@ -62,6 +59,30 @@ const Room = ({
 
   const [userAspectRatio, setUserAspectRatio] = React.useState<number>();
 
+  function handleICECandidateEvent(e: RTCPeerConnectionIceEvent) {
+    if (e.candidate) {
+      emitter.send(socket, {
+        type: "ice-candidate",
+        content: {
+          friendname: state.friendname,
+          candidate: e.candidate,
+        },
+      });
+    }
+  }
+  function handleTrackEvent(e: RTCTrackEvent) {
+    partnerVideoRef.current!.srcObject = e.streams[0];
+  }
+
+  function createPeer(/* userID: string */) {
+    const peer = new RTCPeerConnection(rtcConfig);
+
+    peer.onicecandidate = handleICECandidateEvent;
+    peer.ontrack = handleTrackEvent;
+
+    return peer;
+  }
+
   const responseEventHandler = (response: IResponse) => {
     const { type, success, content } = response;
 
@@ -70,7 +91,7 @@ const Room = ({
         if (success) {
           peerRef.current = createPeer();
           const desc = new RTCSessionDescription(content.offer);
-          peerRef.current.setRemoteDescription(desc)
+          peerRef.current!.setRemoteDescription(desc)
             .then(() => {
               userStreamRef.current!.getTracks().forEach((track) => {
                 peerRef.current!.addTrack(track, userStreamRef.current!);
@@ -86,7 +107,8 @@ const Room = ({
                   answer: peerRef.current!.localDescription,
                 },
               });
-            });
+            })
+            .catch((err) => console.log(err));
         } else {
           notifier.error({
             description: content.description,
@@ -122,30 +144,6 @@ const Room = ({
     }
   };
 
-  function handleICECandidateEvent(e: RTCPeerConnectionIceEvent) {
-    if (e.candidate) {
-      emitter.send(socket, {
-        type: "ice-candidate",
-        content: {
-          friendname: state.friendname,
-          candidate: e.candidate,
-        },
-      });
-    }
-  }
-  function handleTrackEvent(e: RTCTrackEvent) {
-    partnerVideoRef.current!.srcObject = e.streams[0];
-  }
-
-  function createPeer(/* userID: string */) {
-    const peer = new RTCPeerConnection(rtcConfig);
-
-    peer.onicecandidate = handleICECandidateEvent;
-    peer.ontrack = handleTrackEvent;
-
-    return peer;
-  }
-
   React.useEffect(() => {
     navigator.mediaDevices.getUserMedia({ audio: true, video: true })
       .then((stream) => {
@@ -175,7 +173,8 @@ const Room = ({
                 type: "peer-offer",
                 content: payload,
               });
-            });
+            })
+            .catch((err) => console.log(err));
 
           userStreamRef.current!.getTracks().forEach((track) => {
             peerRef.current!.addTrack(track, userStreamRef.current!);
@@ -296,7 +295,7 @@ const Room = ({
           }}
         >
           <Button
-            colorScheme="whiteAlpha"
+            colorScheme="gray"
             w="3.4rem"
             h="3.4rem"
             borderRadius="20rem"

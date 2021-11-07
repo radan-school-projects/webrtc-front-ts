@@ -8,7 +8,6 @@ import {
 } from "@chakra-ui/react";
 import { RouteComponentProps } from "react-router-dom";
 
-import socket from "../app/socket";
 import emitter from "../app/emitter";
 import { IResponse } from "../types";
 import notifier from "../app/notifier";
@@ -16,10 +15,18 @@ import alert from "../app/alert";
 import HeaderBanner from "../components/Home/HeaderBanner";
 import { SignInForm, FriendNameForm } from "../components/Home/Forms";
 import ColorModeSwitcher from "../components/ColorModeSwitcher";
+import { useUser } from "../contexts/user.context";
+// import socket from "../app/socket";
+import { useSocket } from "../contexts/socket.context";
 
 const Home = ({ history }: RouteComponentProps) => {
-  const [username, setUsername] = React.useState<string>("");
-  const [friendname, setFriendname] = React.useState<string>("");
+  const { socket } = useSocket();
+
+  // const [username, setUsername] = React.useState<string>("");
+  // const [friendname, setFriendname] = React.useState<string>("");
+  const {
+    username, friendname, updateUsername: setUsername, updateFriendname: setFriendname,
+  } = useUser();
 
   const [callername, setCallername] = React.useState<string>("");
 
@@ -66,6 +73,7 @@ const Home = ({ history }: RouteComponentProps) => {
       },
     });
     setIsCallAccepted(true);
+    setFriendname(callername);// +++
   };
   const onDenyIncoming = () => {
     emitter.send(socket, {
@@ -78,6 +86,7 @@ const Home = ({ history }: RouteComponentProps) => {
     setCallername("");
     setIsCallAccepted(false);
     setIsCalled(false);
+    setFriendname("");//+++
   };
 
   const handleCallBtnClick: React.MouseEventHandler<HTMLButtonElement> = (e) => {
