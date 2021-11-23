@@ -7,35 +7,37 @@ import {
   Text,
 } from "@chakra-ui/react";
 import { RouteComponentProps } from "react-router-dom";
-import { AiOutlineFullscreen } from "react-icons/ai";
+import { AiOutlineFullscreen, AiOutlineFullscreenExit } from "react-icons/ai";
 import { FiPhoneOff } from "react-icons/fi";
 
-import socket from "../app/socket";
+// import socket from "../app/socket";
 import emitter from "../app/emitter";
 import { IResponse } from "../types";
 import notifier from "../app/notifier";
 import { rtcConfig } from "../app/webrtc";
-// import src from "../images/room/phone-icon.svg";
+import { useUser } from "../contexts/user.context";
+import { useSocket } from "../contexts/socket.context";
 
 interface Params {}
 interface SaticConText {}
 interface State {
-  friendname: string;
-  username: string;
+  // friendname: string;
+  // username: string;
   isCaller: boolean;
 }
 
-const tempDefaultState: State = {
-  friendname: "strawberry",
-  username: "marbblejelly",
-  isCaller: true,
-};
+// const tempDefaultState: State = {
+//   friendname: "strawberry",
+//   username: "marbblejelly",
+//   isCaller: true,
+// };
 
 const Room = ({
-  location: {
-    state = tempDefaultState,
-  },
+  location: { state }, history,
 }: RouteComponentProps<Params, SaticConText, State>) => {
+  const { friendname, updateFriendname: setFriendName } = useUser();
+  const { socket } = useSocket();
+
   /**
    * Stored this as a state because later while chatting,
    * someone else would like to join
@@ -64,7 +66,7 @@ const Room = ({
       emitter.send(socket, {
         type: "ice-candidate",
         content: {
-          friendname: state.friendname,
+          friendname/* : state.friendname, */,
           candidate: e.candidate,
         },
       });
@@ -103,7 +105,7 @@ const Room = ({
               emitter.send(socket, {
                 type: "peer-answer",
                 content: {
-                  caller: state.friendname, // * the one we want to answer
+                  caller: /* : state.friendname, */ friendname, // * the one we want to answer
                   answer: peerRef.current!.localDescription,
                 },
               });
@@ -120,6 +122,17 @@ const Room = ({
         if (success) {
           const desc = new RTCSessionDescription(content.answer);
           peerRef.current!.setRemoteDescription(desc).catch((e) => console.log(e));
+        } else {
+          notifier.error({
+            description: content.description,
+          });
+        }
+        break;
+
+      case "peer-leave":
+        if (success) {
+          // eslint-disable-next-line @typescript-eslint/no-use-before-define
+          handleLeave();
         } else {
           notifier.error({
             description: content.description,
@@ -163,7 +176,7 @@ const Room = ({
             .then((offer) => {
               peerRef.current!.setLocalDescription(offer);
               const payload = {
-                target: state.friendname,
+                target: friendname/* state.friendname */,
                 offer,
               };
               return payload;
@@ -193,11 +206,11 @@ const Room = ({
 
   ]);
 
-  React.useEffect(() => {
-    const fullscreenchangeHandler = () => {
-      setFullScreenElement(document.fullscreenElement);
-    };
+  const fullscreenchangeHandler = () => {
+    setFullScreenElement(document.fullscreenElement);
+  };
 
+  React.useEffect(() => {
     document.addEventListener("fullscreenchange", fullscreenchangeHandler);
 
     return () => {
@@ -210,6 +223,43 @@ const Room = ({
   function makeFullScreen() {
     const elem = document.documentElement;
     elem.requestFullscreen();
+  }
+
+  function exitFullScreen() {
+    document.exitFullscreen();
+  }
+
+  function handleLeave() {
+    partnerVideoRef.current!.srcObject = null;
+    peerRef.current!.close();
+    peerRef.current!.onicecandidate = null;
+    peerRef.current!.ontrack = null;
+    userStreamRef.current!.getTracks().forEach((track) => {
+      track.stop();
+    });
+    userStreamRef.current = undefined;
+    peerRef.current = undefined;
+
+    setFriendName(""); // from user context
+    history.replace("/");
+
+    //     connectedUser = null;
+    // theirVideo.src = null;
+    // yourConnection.close();
+    // yourConnection.onicecandidate = null;
+    // yourConnection.onaddstream = null;
+    // setupPeerConnection(stream);
+  }
+
+  function endCall() {
+    emitter.send(socket, {
+      type: "peer-leave",
+      content: {
+        target: friendname,
+      },
+    });
+
+    handleLeave();
   }
 
   return (
@@ -229,7 +279,6 @@ const Room = ({
         h="100vh"
         bgColor="rgba(21, 21, 21, 0.5)"
         onClick={makeFullScreen}
-        // d={isFullScreen ? "none" : "flex"}
         d={{
           base: fullScreenElement === null ? "flex" : "none",
           lg: "none",
@@ -300,11 +349,11 @@ const Room = ({
             h="3.4rem"
             borderRadius="20rem"
             className="elevation"
-            onClick={makeFullScreen}
+            onClick={fullScreenElement === null ? makeFullScreen : exitFullScreen}
           >
-            <AiOutlineFullscreen
-              className="text-9xl font-black"
-            />
+            {fullScreenElement === null
+              ? <AiOutlineFullscreen className="text-9xl font-black" />
+              : <AiOutlineFullscreenExit className="text-9xl font-black" />}
           </Button>
         </Box>
         <Box
@@ -319,9 +368,10 @@ const Room = ({
             h="3.4rem"
             borderRadius="20rem"
             className="elevation"
+            onClick={endCall}
           >
             <FiPhoneOff
-              className=" text-xl font-black"
+              className="text-xl font-black"
             />
           </Button>
         </Box>
