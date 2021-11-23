@@ -3,9 +3,14 @@ import { IResponse } from "../types";
 import notifier from "./notifier";
 
 // use local address IP for tests
-const SOCKET_SERVER_URL = import.meta.env.VITE_SOCKET_SERVER_URL || "http://localhost:3300";
+// const SOCKET_SERVER_URL = import.meta.env.VITE_SOCKET_SERVER_URL || "/";
 
-const socket = io(SOCKET_SERVER_URL, {
+// const socket = io(SOCKET_SERVER_URL, {
+//   autoConnect: false,
+//   withCredentials: true,
+// });
+
+const socket = io({
   autoConnect: false,
   withCredentials: true,
 });
