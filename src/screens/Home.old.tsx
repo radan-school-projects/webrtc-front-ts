@@ -212,14 +212,84 @@ const Home = ({ history }: RouteComponentProps) => {
   ]);
 
   return (
-    <div className="w-full h-[100vh] flex flex-col">
-      <div>
-        <p>Quoi?</p>
-      </div>
-      <div className="flex-grow bg-gray-500 ">
-        <p className="text-xl text-purple-600">Bonjour</p>
-      </div>
-    </div>
+    <Flex
+      bgColor="#f6f6f6"
+      h="100vh"
+      // minH="100vh"
+      flexDir="column"
+      overflowX="hidden"
+    >
+      {/* AppBar */}
+      <Box
+        boxShadow="0px 2px 4px rgba(100,100,100,0.5)"
+      >
+        <Container
+          maxW="container.lg"
+        >
+          <Flex
+            justifyContent="space-between"
+            alignItems="center"
+            h="3.6rem"
+          >
+            {/* Logo */}
+            <Box
+              fontSize="1.6rem"
+              fontWeight="bold"
+            >
+              W
+            </Box>
+
+            {/* Menu */}
+            <Box>
+              <ColorModeSwitcher />
+            </Box>
+          </Flex>
+        </Container>
+      </Box>
+
+      <Box
+        flexGrow={1}
+      >
+        <Box
+          // maxW="container.lg"
+          position="relative"
+          top="50%"
+          transform="translateY(-50%)"
+          display={{ lg: "flex" }}
+          justifyContent={{ lg: "space-between" }}
+          alignItems={{ lg: "center" }}
+          maxW={{ lg: "container.lg" }}
+          m={{ lg: "0 auto" }}
+          // bgColor="red.400"
+        >
+          {/* Static Banner */}
+          <HeaderBanner
+            username={socketConnected ? username : ""}
+          />
+
+          <Box
+            maxW={{ base: "container.lg", lg: "unset" }}
+            // w={{ lg: "40%" }}
+          >
+            {(!socketConnected)
+              ? (
+                <SignInForm
+                  name={username}
+                  handleNameInputChange={handleUsernameInputChange}
+                  buttonAction={handleRegisterBtnClick}
+                />
+              )
+              : (
+                <FriendNameForm
+                  name={friendname}
+                  handleNameInputChange={handleFriendnameInputChange}
+                  buttonAction={handleCallBtnClick}
+                />
+              )}
+          </Box>
+        </Box>
+      </Box>
+    </Flex>
   );
 };
 
