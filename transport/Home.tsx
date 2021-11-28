@@ -1,18 +1,23 @@
 /* eslint-disable @typescript-eslint/no-use-before-define */
 import React from "react";
+import {
+  Box,
+  Flex,
+  Container,
+  // Text,
+} from "@chakra-ui/react";
 import { RouteComponentProps } from "react-router-dom";
 
 import emitter from "../app/emitter";
 import { IResponse } from "../types";
 import notifier from "../app/notifier";
 import alert from "../app/alert";
-// import HeaderBanner from "../components/Home/HeaderBanner";
-// import { SignInForm, FriendNameForm } from "../components/Home/Forms";
-// import ColorModeSwitcher from "../components/ColorModeSwitcher";
+import HeaderBanner from "../components/Home/HeaderBanner";
+import { SignInForm, FriendNameForm } from "../components/Home/Forms";
+import ColorModeSwitcher from "../components/ColorModeSwitcher";
 import { useUser } from "../contexts/user.context";
 // import socket from "../app/socket";
 import { useSocket } from "../contexts/socket.context";
-import { FormBase } from "../components/Home/Forms";
 
 const Home = ({ history }: RouteComponentProps) => {
   const { socket } = useSocket();
@@ -202,7 +207,7 @@ const Home = ({ history }: RouteComponentProps) => {
 
   React.useEffect(() => {
     if (isCallAccepted) {
-      history.push("/room2", {
+      history.push("/room", {
         // friendname: isCalling ? friendname : callername,
         // username,
         isCaller: !!isCalling,
@@ -216,45 +221,84 @@ const Home = ({ history }: RouteComponentProps) => {
   ]);
 
   return (
-    <div className="min-h-screen bg-gray-100 flex flex-col justify-center py-12 px-6 lg:px-8">
-      <div className="sm:mx-auto sm:w-full sm:max-w-md">
-        <img className="mx-auto h-12 w-auto" src="/images/webrtc_logo.svg" alt="webrtc chat" />
-        <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
-          {(!!socketConnected && !!username)
-            ? (
-              <>
-                Hi&nbsp;
-                <span className="text-indigo-500">{username}</span>
-              </>
-            )
-            : "Set a username"}
-        </h2>
-        {(!!socketConnected && !!username) ? <p className="text-center text-sm font-medium text-gray-700">Try to call someone or wait them to call you</p> : null}
-      </div>
+    <Flex
+      bgColor="#f6f6f6"
+      h="100vh"
+      // minH="100vh"
+      flexDir="column"
+      overflowX="hidden"
+    >
+      {/* AppBar */}
+      <Box
+        boxShadow="0px 2px 4px rgba(100,100,100,0.5)"
+      >
+        <Container
+          maxW="container.lg"
+        >
+          <Flex
+            justifyContent="space-between"
+            alignItems="center"
+            h="3.6rem"
+          >
+            {/* Logo */}
+            <Box
+              fontSize="1.6rem"
+              fontWeight="bold"
+            >
+              W
+            </Box>
 
-      {(!!socketConnected && !!username)
-        ? (
-          <FormBase
-            name={friendname}
-            handleInputChange={handleFriendnameInputChange}
-            buttonAction={handleCallBtnClick}
-            buttonText="Call"
-            labelText="Friend username"
-            placeholder="e.g. pepsi-cola"
-          />
-        )
-        : (
-          <FormBase
-            name={username}
-            handleInputChange={handleUsernameInputChange}
-            buttonAction={handleRegisterBtnClick}
-            buttonText="Continue"
-            labelText="Username"
-            placeholder="e.g. coca-cola"
-          />
-        )}
+            {/* Menu */}
+            <Box>
+              <ColorModeSwitcher />
+            </Box>
+          </Flex>
+        </Container>
+      </Box>
 
-    </div>
+      <Box
+        flexGrow={1}
+      >
+        <Box
+          // maxW="container.lg"
+          position="relative"
+          top="50%"
+          transform="translateY(-50%)"
+          display={{ lg: "flex" }}
+          justifyContent={{ lg: "space-between" }}
+          alignItems={{ lg: "center" }}
+          maxW={{ lg: "container.lg" }}
+          m={{ lg: "0 auto" }}
+          // bgColor="red.400"
+        >
+          {/* Static Banner */}
+          <HeaderBanner
+            username={socketConnected ? username : ""}
+          />
+
+          <Box
+            maxW={{ base: "container.lg", lg: "unset" }}
+            // w={{ lg: "40%" }}
+          >
+            {(!socketConnected)
+              ? (
+                <SignInForm
+                  name={username}
+                  handleNameInputChange={handleUsernameInputChange}
+                  buttonAction={handleRegisterBtnClick}
+                />
+              )
+              : (
+                <FriendNameForm
+                  name={friendname}
+                  handleNameInputChange={handleFriendnameInputChange}
+                  buttonAction={handleCallBtnClick}
+                />
+              )}
+          </Box>
+        </Box>
+      </Box>
+    </Flex>
   );
 };
 
