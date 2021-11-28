@@ -46,7 +46,7 @@ const incomingCall = ({
       title: "font-semibold text-2xl text-indigo-700 mt-0 mb-0",
       htmlContainer: "pt-0",
       // actions: "mt-0",
-      cancelButton: "w-32 h-14 rounded-lg bg-yellow-700 text-white focus:outline-none mr-3",
+      cancelButton: "w-32 h-14 rounded-lg bg-yellow-500 text-white focus:outline-none mr-3",
       confirmButton: "w-32 h-14 rounded-lg bg-indigo-700 text-white focus:outline-none ml-3",
     },
   }).then((result) => {
@@ -84,7 +84,7 @@ const dialingCall = ({
       title: "font-semibold text-2xl text-indigo-700 mt-0 mb-0",
       htmlContainer: "pt-0",
       // actions: "mt-0",
-      cancelButton: "w-72 h-14 rounded-lg bg-yellow-700 text-white focus:outline-none",
+      cancelButton: "w-72 h-14 rounded-lg bg-yellow-500 text-white focus:outline-none",
     },
   }).then((result) => {
     if (
