@@ -1,12 +1,10 @@
 /* eslint-disable prefer-destructuring */
 import React from "react";
 import { RouteComponentProps } from "react-router-dom";
-// import { AiOutlineFullscreen, AiOutlineFullscreenExit } from "react-icons/ai";
 import { FiPhoneOff } from "react-icons/fi";
 import { motion } from "framer-motion";
 import { Helmet } from "react-helmet";
 
-// import socket from "../app/socket";
 import emitter from "../app/emitter";
 import { IResponse } from "../types";
 import notifier from "../app/notifier";
@@ -17,16 +15,8 @@ import { useSocket } from "../contexts/socket.context";
 interface Params {}
 interface SaticConText {}
 interface State {
-  // friendname: string;
-  // username: string;
   isCaller: boolean;
 }
-
-// const tempDefaultState: State = {
-//   friendname: "strawberry",
-//   username: "marbblejelly",
-//   isCaller: true,
-// };
 
 const Room = ({
   location: { state }, history,
@@ -43,26 +33,19 @@ const Room = ({
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [isCaller, setIscaller] = React.useState<boolean>(state.isCaller);
 
-  // const [isFullScreen, setIsFullScreen] = React.useState<boolean>(false);
-  // const [fullScreenElement, setFullScreenElement] = React.useState(document.fullscreenElement);
-
   const userVideoRef = React.useRef<HTMLVideoElement>(null);
   const partnerVideoRef = React.useRef<HTMLVideoElement>(null);
 
   const peerRef = React.useRef<RTCPeerConnection>();
-  // const socketRef = React.useRef<Socket>(socket);
 
-  // const otherUser = React.useRef<string>();
   const userStreamRef = React.useRef<MediaStream>();
-
-  // const [userAspectRatio, setUserAspectRatio] = React.useState<number>();
 
   function handleICECandidateEvent(e: RTCPeerConnectionIceEvent) {
     if (e.candidate) {
       emitter.send(socket, {
         type: "ice-candidate",
         content: {
-          friendname/* : state.friendname, */,
+          friendname,
           candidate: e.candidate,
         },
       });
@@ -72,13 +55,28 @@ const Room = ({
     partnerVideoRef.current!.srcObject = e.streams[0];
   }
 
-  function createPeer(/* userID: string */) {
+  function createPeer() {
     const peer = new RTCPeerConnection(rtcConfig);
 
     peer.onicecandidate = handleICECandidateEvent;
     peer.ontrack = handleTrackEvent;
 
     return peer;
+  }
+
+  function handleLeave() {
+    partnerVideoRef.current!.srcObject = null;
+    peerRef.current!.close();
+    peerRef.current!.onicecandidate = null;
+    peerRef.current!.ontrack = null;
+    userStreamRef.current!.getTracks().forEach((track) => {
+      track.stop();
+    });
+    userStreamRef.current = undefined;
+    peerRef.current = undefined;
+
+    setFriendName(""); // from user context
+    history.replace("/");
   }
 
   const responseEventHandler = (response: IResponse) => {
@@ -101,7 +99,7 @@ const Room = ({
               emitter.send(socket, {
                 type: "peer-answer",
                 content: {
-                  caller: /* : state.friendname, */ friendname, // * the one we want to answer
+                  caller: friendname, // * the one we want to answer
                   answer: peerRef.current!.localDescription,
                 },
               });
@@ -127,7 +125,6 @@ const Room = ({
 
       case "peer-leave":
         if (success) {
-          // eslint-disable-next-line @typescript-eslint/no-use-before-define
           handleLeave();
         } else {
           notifier.error({
@@ -139,7 +136,6 @@ const Room = ({
       case "ice-candidate":
         if (success) {
           const candidate = new RTCIceCandidate(content.candidate);
-          // if (candidate)
           peerRef.current!.addIceCandidate(candidate).catch((e) => console.log(e));
         } else {
           notifier.error({
@@ -159,20 +155,13 @@ const Room = ({
         userVideoRef.current!.srcObject = stream;
         userStreamRef.current = stream;
 
-        // setUserAspectRatio(userStreamRef.current!.getVideoTracks()[0].getSettings().aspectRatio);
-
-        // ! Just for UI Dev purpose
-        // partnerVideoRef.current!.srcObject = stream;//! remove this line!!!
-        // const elem = document.documentElement;
-        // elem.requestFullscreen();
-
         if (isCaller) { // * Call our partner
           peerRef.current = createPeer();
           peerRef.current!.createOffer()
             .then((offer) => {
               peerRef.current!.setLocalDescription(offer);
               const payload = {
-                target: friendname/* state.friendname */,
+                target: friendname,
                 offer,
               };
               return payload;
@@ -201,51 +190,6 @@ const Room = ({
   }, [
 
   ]);
-
-  // const fullscreenchangeHandler = () => {
-  //   setFullScreenElement(document.fullscreenElement);
-  // };
-
-  // React.useEffect(() => {
-  //   document.addEventListener("fullscreenchange", fullscreenchangeHandler);
-
-  //   return () => {
-  //     document.removeEventListener("fullscreenchange", fullscreenchangeHandler);
-  //   };
-  // }, [
-
-  // ]);
-
-  // function makeFullScreen() {
-  //   const elem = document.documentElement;
-  //   elem.requestFullscreen();
-  // }
-
-  // function exitFullScreen() {
-  //   document.exitFullscreen();
-  // }
-
-  function handleLeave() {
-    partnerVideoRef.current!.srcObject = null;
-    peerRef.current!.close();
-    peerRef.current!.onicecandidate = null;
-    peerRef.current!.ontrack = null;
-    userStreamRef.current!.getTracks().forEach((track) => {
-      track.stop();
-    });
-    userStreamRef.current = undefined;
-    peerRef.current = undefined;
-
-    setFriendName(""); // from user context
-    history.replace("/");
-
-    //     connectedUser = null;
-    // theirVideo.src = null;
-    // yourConnection.close();
-    // yourConnection.onicecandidate = null;
-    // yourConnection.onaddstream = null;
-    // setupPeerConnection(stream);
-  }
 
   function endCall() {
     emitter.send(socket, {

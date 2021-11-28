@@ -7,13 +7,10 @@ import {
 
 import {
   Home,
-  // Room,
-  // RoomUI,
   Room,
 } from "./screens";
 import ProtectedRoute from "./components/ProtectedRoute";
 import { useUser } from "./contexts/user.context";
-// import socket from "./app/socket";
 import { useSocket } from "./contexts/socket.context";
 
 const Routes = () => {

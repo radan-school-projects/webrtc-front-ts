@@ -7,19 +7,13 @@ import emitter from "../app/emitter";
 import { IResponse } from "../types";
 import notifier from "../app/notifier";
 import alert from "../app/alert";
-// import HeaderBanner from "../components/Home/HeaderBanner";
-// import { SignInForm, FriendNameForm } from "../components/Home/Forms";
-// import ColorModeSwitcher from "../components/ColorModeSwitcher";
 import { useUser } from "../contexts/user.context";
-// import socket from "../app/socket";
 import { useSocket } from "../contexts/socket.context";
 import { FormBase } from "../components/Home/Forms";
 
 const Home = ({ history }: RouteComponentProps) => {
   const { socket } = useSocket();
 
-  // const [username, setUsername] = React.useState<string>("");
-  // const [friendname, setFriendname] = React.useState<string>("");
   const {
     username, friendname, updateUsername: setUsername, updateFriendname: setFriendname,
   } = useUser();
@@ -157,13 +151,6 @@ const Home = ({ history }: RouteComponentProps) => {
   };
 
   React.useEffect(() => {
-    // setSocketConnected(false);
-    // setUsername("");
-    // setFriendname("alefa");
-    // setIsCalling(false);
-    // setCallername("borodin");
-    // setIsCalled(true);
-    // setUsername("");
     socket.on("response", responseEventHandler);
     return () => {
       socket.off("response", responseEventHandler);
@@ -204,8 +191,6 @@ const Home = ({ history }: RouteComponentProps) => {
   React.useEffect(() => {
     if (isCallAccepted) {
       history.replace("/room", {
-        // friendname: isCalling ? friendname : callername,
-        // username,
         isCaller: !!isCalling,
       });
     } else {
