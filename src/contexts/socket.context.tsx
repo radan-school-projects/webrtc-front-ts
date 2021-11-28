@@ -26,21 +26,6 @@ export const SocketProvider = ({ children }: SocketProviderProps) => {
     socket,
   };
 
-  const handleBeforeUnload = (e:BeforeUnloadEvent) => {
-    if (socket.connected) {
-      e.returnValue = "You will lose your connection to the socket!";
-    }
-  };
-
-  React.useEffect(() => {
-    window.addEventListener("beforeunload", handleBeforeUnload);
-    return () => {
-      window.removeEventListener("beforeunload", handleBeforeUnload);
-    };
-  }, [
-
-  ]);
-
   return (
     <socketContext.Provider value={value}>
       {children}
