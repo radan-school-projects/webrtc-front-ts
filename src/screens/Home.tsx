@@ -2,6 +2,7 @@
 import React from "react";
 import { RouteComponentProps } from "react-router-dom";
 import { Helmet } from "react-helmet";
+import { uniqueNamesGenerator } from "unique-names-generator";
 
 import emitter from "../app/emitter";
 import { IResponse } from "../types";
@@ -10,6 +11,7 @@ import alert from "../app/alert";
 import { useUser } from "../contexts/user.context";
 import { useSocket } from "../contexts/socket.context";
 import { FormBase } from "../components/Home/Forms";
+import { customConfig } from "../app/namegenerator";
 
 const Home = ({ history }: RouteComponentProps) => {
   const { socket } = useSocket();
@@ -201,6 +203,11 @@ const Home = ({ history }: RouteComponentProps) => {
     setIsCallAccepted,
   ]);
 
+  const generateUsername = () => {
+    const randomName: string = uniqueNamesGenerator(customConfig);
+    setUsername(randomName);
+  };
+
   return (
     <>
       <Helmet>
@@ -231,6 +238,7 @@ const Home = ({ history }: RouteComponentProps) => {
               buttonText="Call"
               labelText="Friend username"
               placeholder="e.g. pepsicola"
+              isUserForm={false}
             />
           )
           : (
@@ -241,6 +249,8 @@ const Home = ({ history }: RouteComponentProps) => {
               buttonText="Continue"
               labelText="Username"
               placeholder="e.g. cocacola"
+              isUserForm
+              generateUsername={generateUsername}
             />
           )}
 
