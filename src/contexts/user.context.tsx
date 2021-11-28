@@ -28,13 +28,13 @@ export const UserProvider = ({ children }: UserProviderProps) => {
   const [username, setUsername] = useState<string>("");
   const [friendname, setFriendname] = useState<string>("");
 
-  React.useEffect(() => {
-    console.log(username);
-  }, [username]);
+  // React.useEffect(() => {
+  //   console.log(username);
+  // }, [username]);
 
-  React.useEffect(() => {
-    console.log(friendname);
-  }, [friendname]);
+  // React.useEffect(() => {
+  //   console.log(friendname);
+  // }, [friendname]);
 
   const updateUsername = (newUsername: string) => {
     setUsername(newUsername);
