@@ -203,7 +203,7 @@ const Home = ({ history }: RouteComponentProps) => {
 
   React.useEffect(() => {
     if (isCallAccepted) {
-      history.push("/room2", {
+      history.replace("/room", {
         // friendname: isCalling ? friendname : callername,
         // username,
         isCaller: !!isCalling,
