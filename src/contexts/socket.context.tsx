@@ -37,10 +37,9 @@ export const SocketProvider = ({ children }: SocketProviderProps) => {
     return () => {
       window.removeEventListener("beforeunload", handleBeforeUnload);
     };
-    // window.onbeforeunload = (e) => {
-    //   e.
-    // }
-  });
+  }, [
+
+  ]);
 
   return (
     <socketContext.Provider value={value}>
