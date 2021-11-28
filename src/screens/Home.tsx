@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-use-before-define */
 import React from "react";
 import { RouteComponentProps } from "react-router-dom";
+import { Helmet } from "react-helmet";
 
 import emitter from "../app/emitter";
 import { IResponse } from "../types";
@@ -216,45 +217,50 @@ const Home = ({ history }: RouteComponentProps) => {
   ]);
 
   return (
-    <div className="min-h-screen bg-gray-100 flex flex-col justify-center py-12 px-6 lg:px-8">
-      <div className="sm:mx-auto sm:w-full sm:max-w-md">
-        <img className="mx-auto h-12 w-auto" src="/images/webrtc_logo.svg" alt="webrtc chat" />
-        <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
-          {(!!socketConnected && !!username)
-            ? (
-              <>
-                Hi&nbsp;
-                <span className="text-indigo-500">{username}</span>
-              </>
-            )
-            : "Set a username"}
-        </h2>
-        {(!!socketConnected && !!username) ? <p className="text-center text-sm font-medium text-gray-700">Try to call someone or wait them to call you</p> : null}
+    <>
+      <Helmet>
+        <title>ChatSignal Home</title>
+      </Helmet>
+      <div className="min-h-screen bg-gray-100 flex flex-col justify-center py-12 px-6 lg:px-8">
+        <div className="sm:mx-auto sm:w-full sm:max-w-md">
+          <img className="mx-auto h-12 w-auto" src="/images/webrtc_logo.svg" alt="webrtc chat" />
+          <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
+            {(!!socketConnected && !!username)
+              ? (
+                <>
+                  Hi&nbsp;
+                  <span className="text-indigo-500">{username}</span>
+                </>
+              )
+              : "Set a username"}
+          </h2>
+          {(!!socketConnected && !!username) ? <p className="text-center text-sm font-medium text-gray-700">Try to call someone or wait them to call you</p> : null}
+        </div>
+
+        {(!!socketConnected && !!username)
+          ? (
+            <FormBase
+              name={friendname}
+              handleInputChange={handleFriendnameInputChange}
+              buttonAction={handleCallBtnClick}
+              buttonText="Call"
+              labelText="Friend username"
+              placeholder="e.g. pepsicola"
+            />
+          )
+          : (
+            <FormBase
+              name={username}
+              handleInputChange={handleUsernameInputChange}
+              buttonAction={handleRegisterBtnClick}
+              buttonText="Continue"
+              labelText="Username"
+              placeholder="e.g. cocacola"
+            />
+          )}
+
       </div>
-
-      {(!!socketConnected && !!username)
-        ? (
-          <FormBase
-            name={friendname}
-            handleInputChange={handleFriendnameInputChange}
-            buttonAction={handleCallBtnClick}
-            buttonText="Call"
-            labelText="Friend username"
-            placeholder="e.g. pepsi-cola"
-          />
-        )
-        : (
-          <FormBase
-            name={username}
-            handleInputChange={handleUsernameInputChange}
-            buttonAction={handleRegisterBtnClick}
-            buttonText="Continue"
-            labelText="Username"
-            placeholder="e.g. coca-cola"
-          />
-        )}
-
-    </div>
+    </>
   );
 };
 
