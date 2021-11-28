@@ -14,7 +14,7 @@ import { FormBase } from "../components/Home/Forms";
 import { customConfig } from "../app/namegenerator";
 
 const Home = ({ history }: RouteComponentProps) => {
-  const { socket } = useSocket();
+  const { socket, isSocketConnected } = useSocket();
 
   const {
     username, friendname, updateUsername: setUsername, updateFriendname: setFriendname,
@@ -27,7 +27,7 @@ const Home = ({ history }: RouteComponentProps) => {
 
   const [isCallAccepted, setIsCallAccepted] = React.useState<boolean>(false);
 
-  const [socketConnected, setSocketConnected] = React.useState<boolean>(socket.connected);
+  // const [socketConnected, setSocketConnected] = React.useState<boolean>(socket.connected);
 
   const handleUsernameInputChange: React.ChangeEventHandler<HTMLInputElement> = (e) => {
     e.preventDefault();
@@ -83,7 +83,7 @@ const Home = ({ history }: RouteComponentProps) => {
 
   const handleCallBtnClick: React.MouseEventHandler<HTMLButtonElement> = (e) => {
     e.preventDefault();
-    if (!socket.connected) {
+    if (!isSocketConnected/* socket.connected */) {
       notifier.error({
         description: "You should register first!",
       });
@@ -108,7 +108,7 @@ const Home = ({ history }: RouteComponentProps) => {
         // } else {
         //   setSocketConnected(false);
         // }
-        setSocketConnected(success);
+        // setSocketConnected(success);// ! important
         break;
       case "call-offer":
         if (success) {
@@ -217,7 +217,7 @@ const Home = ({ history }: RouteComponentProps) => {
         <div className="sm:mx-auto sm:w-full sm:max-w-md">
           <img className="mx-auto h-12 w-auto" src="/images/webrtc_logo.svg" alt="webrtc chat" />
           <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
-            {(!!socketConnected && !!username)
+            {(!!isSocketConnected && !!username)
               ? (
                 <>
                   Hi&nbsp;
@@ -226,10 +226,10 @@ const Home = ({ history }: RouteComponentProps) => {
               )
               : "Set a username"}
           </h2>
-          {(!!socketConnected && !!username) ? <p className="text-center text-sm font-medium text-gray-700">Try to call someone or wait them to call you</p> : null}
+          {(!!isSocketConnected && !!username) ? <p className="text-center text-sm font-medium text-gray-700">Try to call someone or wait them to call you</p> : null}
         </div>
 
-        {(!!socketConnected && !!username)
+        {(!!isSocketConnected && !!username)
           ? (
             <FormBase
               name={friendname}
