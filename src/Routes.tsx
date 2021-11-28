@@ -14,9 +14,10 @@ import { useUser } from "./contexts/user.context";
 import { useSocket } from "./contexts/socket.context";
 
 const Routes = () => {
-  const { socket } = useSocket();
+  const { isSocketConnected } = useSocket();
   const { username, friendname } = useUser();
-  const isAuthenticated = socket.connected === true && !username === false && !friendname === false;
+  const isAuthenticated =
+    isSocketConnected === true && !username === false && !friendname === false;
   return (
     <BrowserRouter>
       <Switch>

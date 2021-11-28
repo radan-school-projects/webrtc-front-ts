@@ -191,6 +191,21 @@ const Room = ({
 
   ]);
 
+  const handleBeforeUnload = (e:BeforeUnloadEvent) => {
+    // if (socket.connected) {
+    e.returnValue = "You will lose your connection to the socket!";
+    // }
+  };
+
+  React.useEffect(() => {
+    window.addEventListener("beforeunload", handleBeforeUnload);
+    return () => {
+      window.removeEventListener("beforeunload", handleBeforeUnload);
+    };
+  }, [
+
+  ]);
+
   function endCall() {
     emitter.send(socket, {
       type: "peer-leave",
