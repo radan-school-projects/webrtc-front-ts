@@ -15,11 +15,15 @@ import notifier from "../app/notifier";
 import alert from "../app/alert";
 // import HeaderBanner from "../components/Home/HeaderBanner";
 import { /* SignInForm, FriendNameForm, */ FormBase } from "../components/Home/Forms";
+import { useUser } from "../contexts/user.context";
 // import ColorModeSwitcher from "../components/ColorModeSwitcher";
 
 const Home = ({ history }: RouteComponentProps) => {
-  const [username, setUsername] = React.useState<string>("");
-  const [friendname, setFriendname] = React.useState<string>("");
+  // const [username, setUsername] = React.useState<string>("");
+  // const [friendname, setFriendname] = React.useState<string>("");
+  const {
+    username, friendname, updateFriendname: setFriendname, updateUsername: setUsername,
+  } = useUser();
 
   const [callername, setCallername] = React.useState<string>("");
 
@@ -198,9 +202,9 @@ const Home = ({ history }: RouteComponentProps) => {
 
   React.useEffect(() => {
     if (isCallAccepted) {
-      history.push("/room", {
-        friendname: isCalling ? friendname : callername,
-        username,
+      history.push("/room2", {
+        // friendname: isCalling ? friendname : callername,
+        // username,
         isCaller: !!isCalling,
       });
     } else {

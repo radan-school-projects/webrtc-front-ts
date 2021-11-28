@@ -8,6 +8,8 @@ import {
 import {
   Home,
   Room,
+  RoomUI,
+  Room2,
 } from "./screens";
 import ProtectedRoute from "./components/ProtectedRoute";
 import { useUser } from "./contexts/user.context";
@@ -22,8 +24,9 @@ const Routes = () => {
     <BrowserRouter>
       <Switch>
         <Route exact path="/" component={Home} />
-        {/* <Route path="/room" component={Room} /> */}
+        <Route path="/roomui" component={RoomUI} />
         <ProtectedRoute isAuthenticated={isAuthenticated} authenticationPath="/" path="/room" component={Room} />
+        <ProtectedRoute isAuthenticated={isAuthenticated} authenticationPath="/" path="/room2" component={Room2} />
       </Switch>
     </BrowserRouter>
   );
