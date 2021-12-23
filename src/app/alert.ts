@@ -7,11 +7,8 @@ interface IncomingCallParams {
 }
 
 const swalBootstrapBtn = Swal.mixin({
-  customClass: {
-    confirmButton: "btn btn-success",
-    cancelButton: "btn btn-danger",
-  },
   buttonsStyling: false,
+  width: "20rem",
 });
 
 const allowOutsideClick = () => {
@@ -33,43 +30,31 @@ const incomingCall = ({
 }: IncomingCallParams) => {
   swalBootstrapBtn.fire({
     title: partner,
-    text: "Incoming call...",
+    // text: "Incoming call...",
+    html: "<p class='text-indigo-500 text-base font-light'>Incoming Call<p>",
     showConfirmButton: true,
     showCancelButton: true,
     confirmButtonText: "accept",
     cancelButtonText: "deny",
     reverseButtons: true,
     allowOutsideClick,
+    backdrop: true,
+    imageUrl: "/images/call/waving-hand.gif",
+    customClass: {
+      popup: "rounded-lg",
+      image: "w-24 h-24 mt-3 mb-0",
+      title: "font-semibold text-2xl text-indigo-700 mt-0 mb-0",
+      htmlContainer: "pt-0",
+      // actions: "mt-0",
+      cancelButton: "w-32 h-14 rounded-lg bg-yellow-500 text-white focus:outline-none mr-3",
+      confirmButton: "w-32 h-14 rounded-lg bg-indigo-700 text-white focus:outline-none ml-3",
+    },
   }).then((result) => {
     if (result.isConfirmed) {
-      // if (type === "incoming") {
-      //   // acceptCall();
-      //   emitter.send(socket, {
-      //     type: "call-answer",
-      //     content: {
-      //       target: callername,
-      //       // target: callernameRef.current,
-      //     },
-      //   });
-      //   history.push("/room", { friendname, username });
-      // }
       onAccept();
     } else if (
-      /* Read more about handling dismissals below */
       result.dismiss === Swal.DismissReason.cancel
     ) {
-      // if (type === "dialing") {
-      //   // cancelCall();
-      //   // setIsCalling(false);
-      //   // emitter.send(socket, {
-      //   //    "call-cancel" ...
-      //   // });
-      // }
-      // if (type === "incoming") {
-      //   // denyCall();
-      //   // setIsCalled(false);
-      //   // setIsCallAccepted(false);
-      // }
       onDeny();
     }
   });
@@ -83,53 +68,29 @@ const dialingCall = ({
   partner,
   onCancel,
 }: DialingCallParams) => {
-  // const swalBootstrapBtn = Swal.mixin({
-  //   customClass: {
-  //     confirmButton: "btn btn-success",
-  //     cancelButton: "btn btn-danger",
-  //   },
-  //   buttonsStyling: false,
-  // });
-
   swalBootstrapBtn.fire({
     title: partner,
-    text: "Dialing...",
+    html: "<p class='text-indigo-700 text-base font-light'>calling<p>",
     showConfirmButton: false,
     showCancelButton: true,
-    cancelButtonText: "cancel",
+    cancelButtonText: "Cancel Call",
     reverseButtons: false,
     allowOutsideClick,
+    backdrop: true,
+    imageUrl: "/images/call/call-me-hand.gif",
+    customClass: {
+      popup: "rounded-lg",
+      image: "w-24 h-24 mt-3 mb-0",
+      title: "font-semibold text-2xl text-indigo-700 mt-0 mb-0",
+      htmlContainer: "pt-0",
+      // actions: "mt-0",
+      cancelButton: "w-72 h-14 rounded-lg bg-yellow-500 text-white focus:outline-none",
+    },
   }).then((result) => {
-    // if (result.isConfirmed) {
-    //   // if (type === "incoming") {
-    //   //   // acceptCall();
-    //   //   emitter.send(socket, {
-    //   //     type: "call-answer",
-    //   //     content: {
-    //   //       target: callername,
-    //   //       // target: callernameRef.current,
-    //   //     },
-    //   //   });
-    //   //   history.push("/room", { friendname, username });
-    //   // }
-    // } else
     if (
-      /* Read more about handling dismissals below */
       result.dismiss === Swal.DismissReason.cancel
     ) {
       onCancel();
-      // if (type === "dialing") {
-      //   // cancelCall();
-      //   // setIsCalling(false);
-      //   // emitter.send(socket, {
-      //   //    "call-cancel" ...
-      //   // });
-      // }
-      // if (type === "incoming") {
-      //   // denyCall();
-      //   // setIsCalled(false);
-      //   // setIsCallAccepted(false);
-      // }
     }
   });
 };

@@ -1,43 +1,83 @@
 /* eslint-disable prefer-destructuring */
-/* eslint-disable @typescript-eslint/no-use-before-define */
 import React from "react";
-import {
-  Box,
-  Flex,
-  Text,
-} from "@chakra-ui/react";
 import { RouteComponentProps } from "react-router-dom";
-import socket from "../app/socket";
+import { FiPhoneOff } from "react-icons/fi";
+import { motion } from "framer-motion";
+import { Helmet } from "react-helmet";
+
 import emitter from "../app/emitter";
 import { IResponse } from "../types";
 import notifier from "../app/notifier";
 import { rtcConfig } from "../app/webrtc";
+import { useUser } from "../contexts/user.context";
+import { useSocket } from "../contexts/socket.context";
 
 interface Params {}
 interface SaticConText {}
 interface State {
-  friendname: string;
-  username: string;
   isCaller: boolean;
 }
 
-const Room = ({ location: { state } }: RouteComponentProps<Params, SaticConText, State>) => {
+const Room = ({
+  location: { state }, history,
+}: RouteComponentProps<Params, SaticConText, State>) => {
+  const { friendname, updateFriendname: setFriendName } = useUser();
+  const { socket } = useSocket();
+
   /**
    * Stored this as a state because later while chatting,
    * someone else would like to join
    * then the joiner will be the new caller
    * and every one else are the called
    */
-  const isCaller = React.useState<boolean>(state.isCaller);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [isCaller, setIscaller] = React.useState<boolean>(state.isCaller);
 
   const userVideoRef = React.useRef<HTMLVideoElement>(null);
   const partnerVideoRef = React.useRef<HTMLVideoElement>(null);
 
   const peerRef = React.useRef<RTCPeerConnection>();
-  // const socketRef = React.useRef<Socket>(socket);
 
-  // const otherUser = React.useRef<string>();
-  const userStream = React.useRef<MediaStream>();
+  const userStreamRef = React.useRef<MediaStream>();
+
+  function handleICECandidateEvent(e: RTCPeerConnectionIceEvent) {
+    if (e.candidate) {
+      emitter.send(socket, {
+        type: "ice-candidate",
+        content: {
+          friendname,
+          candidate: e.candidate,
+        },
+      });
+    }
+  }
+  function handleTrackEvent(e: RTCTrackEvent) {
+    partnerVideoRef.current!.srcObject = e.streams[0];
+  }
+
+  function createPeer() {
+    const peer = new RTCPeerConnection(rtcConfig);
+
+    peer.onicecandidate = handleICECandidateEvent;
+    peer.ontrack = handleTrackEvent;
+
+    return peer;
+  }
+
+  function handleLeave() {
+    partnerVideoRef.current!.srcObject = null;
+    peerRef.current!.close();
+    peerRef.current!.onicecandidate = null;
+    peerRef.current!.ontrack = null;
+    userStreamRef.current!.getTracks().forEach((track) => {
+      track.stop();
+    });
+    userStreamRef.current = undefined;
+    peerRef.current = undefined;
+
+    setFriendName(""); // from user context
+    history.replace("/");
+  }
 
   const responseEventHandler = (response: IResponse) => {
     const { type, success, content } = response;
@@ -47,28 +87,24 @@ const Room = ({ location: { state } }: RouteComponentProps<Params, SaticConText,
         if (success) {
           peerRef.current = createPeer();
           const desc = new RTCSessionDescription(content.offer);
-          peerRef.current.setRemoteDescription(desc)
+          peerRef.current!.setRemoteDescription(desc)
             .then(() => {
-              userStream.current!.getTracks().forEach((track) => {
-                peerRef.current!.addTrack(track, userStream.current!);
+              userStreamRef.current!.getTracks().forEach((track) => {
+                peerRef.current!.addTrack(track, userStreamRef.current!);
               });
             })
             .then(() => peerRef.current!.createAnswer())
             .then((answer) => peerRef.current!.setLocalDescription(answer))
             .then(() => {
-              // const payload = ;
-              // socketRef.current.emit("answer", payload);
               emitter.send(socket, {
                 type: "peer-answer",
                 content: {
-                  // target: incoming.caller,
-                  // caller: socketRef.current.id,
-                  // target: state.friendname,
-                  caller: state.friendname, // * the one we want to answer
+                  caller: friendname, // * the one we want to answer
                   answer: peerRef.current!.localDescription,
                 },
               });
-            });
+            })
+            .catch((err) => console.log(err));
         } else {
           notifier.error({
             description: content.description,
@@ -87,11 +123,20 @@ const Room = ({ location: { state } }: RouteComponentProps<Params, SaticConText,
         }
         break;
 
+      case "peer-leave":
+        if (success) {
+          handleLeave();
+        } else {
+          notifier.error({
+            description: content.description,
+          });
+        }
+        break;
+
       case "ice-candidate":
         if (success) {
           const candidate = new RTCIceCandidate(content.candidate);
-          peerRef.current!.addIceCandidate(candidate)
-            .catch((e) => console.log(e));
+          peerRef.current!.addIceCandidate(candidate).catch((e) => console.log(e));
         } else {
           notifier.error({
             description: content.description,
@@ -104,61 +149,33 @@ const Room = ({ location: { state } }: RouteComponentProps<Params, SaticConText,
     }
   };
 
-  function handleICECandidateEvent(e: RTCPeerConnectionIceEvent) {
-    if (e.candidate) {
-      emitter.send(socket, {
-        type: "ice-candidate",
-        content: {
-          friendname: state.friendname,
-          candidate: e.candidate,
-        },
-      });
-    }
-  }
-  function handleTrackEvent(e: RTCTrackEvent) {
-    partnerVideoRef.current!.srcObject = e.streams[0];
-  }
-
-  function createPeer(/* userID: string */) {
-    const peer = new RTCPeerConnection(rtcConfig);
-
-    peer.onicecandidate = handleICECandidateEvent;
-    peer.ontrack = handleTrackEvent;
-
-    return peer;
-  }
-
   React.useEffect(() => {
     navigator.mediaDevices.getUserMedia({ audio: true, video: true })
       .then((stream) => {
         userVideoRef.current!.srcObject = stream;
-        userStream.current = stream;
+        userStreamRef.current = stream;
 
         if (isCaller) { // * Call our partner
           peerRef.current = createPeer();
-
           peerRef.current!.createOffer()
             .then((offer) => {
               peerRef.current!.setLocalDescription(offer);
               const payload = {
-                target: state.friendname,
-                // caller: socket.id,
-                // caller: state.username,
+                target: friendname,
                 offer,
               };
               return payload;
             })
             .then((payload) => {
-              // socket.emit("offer", payload);
               emitter.send(socket, {
                 type: "peer-offer",
                 content: payload,
               });
             })
-            .catch((e) => console.log(e));
+            .catch((err) => console.log(err));
 
-          userStream.current!.getTracks().forEach((track) => {
-            peerRef.current!.addTrack(track, userStream.current!);
+          userStreamRef.current!.getTracks().forEach((track) => {
+            peerRef.current!.addTrack(track, userStreamRef.current!);
           });
         }
 
@@ -174,31 +191,78 @@ const Room = ({ location: { state } }: RouteComponentProps<Params, SaticConText,
 
   ]);
 
+  const handleBeforeUnload = (e:BeforeUnloadEvent) => {
+    // if (socket.connected) {
+    e.returnValue = "You will lose your connection to the socket!";
+    // }
+  };
+
+  React.useEffect(() => {
+    window.addEventListener("beforeunload", handleBeforeUnload);
+    return () => {
+      window.removeEventListener("beforeunload", handleBeforeUnload);
+    };
+  }, [
+
+  ]);
+
+  function endCall() {
+    emitter.send(socket, {
+      type: "peer-leave",
+      content: {
+        target: friendname,
+      },
+    });
+
+    handleLeave();
+  }
+
+  const constraintsRef = React.useRef<HTMLDivElement>(null);
+
   return (
-    <Box>
-      <Text fontSize="4xl" color={socket.connected ? "tomato" : "black"}>This is a room</Text>
-      <Text fontSize="4xl">
-        Your name is&nbsp;
-        {state.username}
-        &nbsp;
-        and you&apos;ll chat with&nbsp;
-        {state.friendname}
-      </Text>
-      <Flex>
-        <Box>
-          <Text fontSize="xl">You</Text>
-          <video autoPlay ref={userVideoRef}>
+    <>
+      <Helmet>
+        <title>
+          Chat with&nbsp;
+          {friendname}
+        </title>
+      </Helmet>
+      <div className="w-screen h-screen bg-gray-300" ref={constraintsRef}>
+        <motion.div
+          drag
+          className="absolute top-2 left-2 z-10"
+          dragConstraints={constraintsRef}
+          dragElastic={0.1}
+          dragPropagation
+        >
+          <video
+            autoPlay
+            ref={userVideoRef}
+            className="w-40  rounded-lg"
+          >
             <track kind="captions" />
           </video>
-        </Box>
-        <Box>
-          <Text fontSize="xl">Your friend</Text>
-          <video autoPlay ref={partnerVideoRef}>
+        </motion.div>
+
+        <div className="flex items-center justify-center h-full w-full z-0 overflow-hidden">
+          <video
+            autoPlay
+            ref={partnerVideoRef}
+            className="sm:h-full"
+          >
             <track kind="captions" />
           </video>
-        </Box>
-      </Flex>
-    </Box>
+        </div>
+
+        <button
+          className="absolute bottom-6 left-[50%] translate-x-[-50%] z-20 p-0 w-12 h-12 bg-red-600 rounded-full hover:bg-red-700 active:shadow-lg mouse shadow transition ease-in duration-200 focus:outline-none"
+          type="button"
+          onClick={endCall}
+        >
+          <FiPhoneOff className="w-5 h-5 inline-block text-white" />
+        </button>
+      </div>
+    </>
   );
 };
 
