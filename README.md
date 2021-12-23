@@ -2,9 +2,9 @@
 
 This Repo focuses on building a simple WebRTC chat app with **React** and **Typescript**.
 
-For each branches, the corresponding backend could be found on the branch of the same name in webrtc-back-ts [here](https://github.com/radandevist/webrtc-back-ts).
+The corresponding backend could be found in [this repo](https://github.com/radandevist/webrtc-back-ts).
 
-It uses the [client-react-ts](https://github.com/radandevist/client-react-ts) template.
+This repo uses the [client-react-ts](https://github.com/radandevist/client-react-ts) template.
 
 ## Requirements
 
