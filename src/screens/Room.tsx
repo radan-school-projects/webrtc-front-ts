@@ -239,6 +239,7 @@ const Room = ({
             autoPlay
             ref={userVideoRef}
             className="w-40  rounded-lg"
+            muted
           >
             <track kind="captions" />
           </video>
@@ -249,6 +250,7 @@ const Room = ({
             autoPlay
             ref={partnerVideoRef}
             className="sm:h-full"
+            // muted
           >
             <track kind="captions" />
           </video>
